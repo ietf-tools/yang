@@ -97,7 +97,7 @@ module ietf-network-slice-service {
      This version of this YANG module is part of RFC AAAA; see the
      RFC itself for full legal notices.";
 
-  revision 2025-02-06 {
+  revision 2025-01-21 {
     description
       "Initial revision.";
     reference
@@ -958,12 +958,6 @@ module ietf-network-slice-service {
         }
       }
       uses service-slo-sle-policy;
-      leaf test-only {
-        type empty;
-        description
-          "When present, this is a feasibility check. That is, no
-           resources are reserved in the network.";
-      }
       uses ac-common:service-status;
       container sdps {
         description
