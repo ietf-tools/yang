@@ -145,7 +145,11 @@ and <xref type="registry" data="safi-namespace">Subsequent Address Family Identi
     <record date="2024-03-26" updated="2025-02-13">
       <name>iana-ssh-encryption-algs</name>
       <iana>Y</iana>
+<<<<<<< HEAD
       <file type="yang">iana-ssh-encryption-algs@2024-10-16.yang</file>
+=======
+      <file type="yang">iana-ssh-encryption-algs@2024-10-10.yang</file>
+>>>>>>> ec0d97049 (Cronjob - daily check of IANA modules.)
       <namespace>urn:ietf:params:xml:ns:yang:iana-ssh-encryption-algs</namespace>
       <prefix>sshea</prefix>
       <module/>
@@ -155,7 +159,11 @@ and <xref type="registry" data="safi-namespace">Subsequent Address Family Identi
     <record date="2024-03-26" updated="2025-02-13">
       <name>iana-ssh-key-exchange-algs</name>
       <iana>Y</iana>
+<<<<<<< HEAD
       <file type="yang">iana-ssh-key-exchange-algs@2024-10-16.yang</file>
+=======
+      <file type="yang">iana-ssh-key-exchange-algs@2024-10-10.yang</file>
+>>>>>>> ec0d97049 (Cronjob - daily check of IANA modules.)
       <namespace>urn:ietf:params:xml:ns:yang:iana-ssh-key-exchange-algs</namespace>
       <prefix>sshkea</prefix>
       <module/>
@@ -165,7 +173,11 @@ and <xref type="registry" data="safi-namespace">Subsequent Address Family Identi
     <record date="2024-03-26" updated="2025-02-13">
       <name>iana-ssh-mac-algs</name>
       <iana>Y</iana>
+<<<<<<< HEAD
       <file type="yang">iana-ssh-mac-algs@2024-10-16.yang</file>
+=======
+      <file type="yang">iana-ssh-mac-algs@2024-10-10.yang</file>
+>>>>>>> ec0d97049 (Cronjob - daily check of IANA modules.)
       <namespace>urn:ietf:params:xml:ns:yang:iana-ssh-mac-algs</namespace>
       <prefix>sshma</prefix>
       <module/>
@@ -175,7 +187,11 @@ and <xref type="registry" data="safi-namespace">Subsequent Address Family Identi
     <record date="2024-03-26" updated="2025-02-13">
       <name>iana-ssh-public-key-algs</name>
       <iana>Y</iana>
+<<<<<<< HEAD
       <file type="yang">iana-ssh-public-key-algs@2024-10-16.yang</file>
+=======
+      <file type="yang">iana-ssh-public-key-algs@2024-10-10.yang</file>
+>>>>>>> ec0d97049 (Cronjob - daily check of IANA modules.)
       <namespace>urn:ietf:params:xml:ns:yang:iana-ssh-public-key-algs</namespace>
       <prefix>sshpka</prefix>
       <module/>
@@ -185,7 +201,11 @@ and <xref type="registry" data="safi-namespace">Subsequent Address Family Identi
     <record date="2024-03-26" updated="2025-02-13">
       <name>iana-tls-cipher-suite-algs</name>
       <iana>Y</iana>
+<<<<<<< HEAD
       <file type="yang">iana-tls-cipher-suite-algs@2024-10-16.yang</file>
+=======
+      <file type="yang">iana-tls-cipher-suite-algs@2024-10-10.yang</file>
+>>>>>>> ec0d97049 (Cronjob - daily check of IANA modules.)
       <namespace>urn:ietf:params:xml:ns:yang:iana-tls-cipher-suite-algs</namespace>
       <prefix>tlscsa</prefix>
       <module/>
