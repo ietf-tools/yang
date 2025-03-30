@@ -88,7 +88,7 @@ module ietf-ospf-sr-mpls {
       This version of this YANG module is part of RFC XXXX; see
      the RFC itself for full legal notices.";
 
-  revision 2025-01-03 {
+  revision 2025-03-28 {
     description
       "Initial revision.";
     reference
@@ -240,6 +240,49 @@ module ietf-ospf-sr-mpls {
   }
 
   /* Groupings */
+  grouping sid-tlv-encoding {
+    leaf sid-raw {
+      type uint32;
+      description
+        "Raw SID value - labels are in the rightmost 20 bits of
+        the value";
+    }
+    choice sid-value {
+      case label-sid {
+        leaf label-value {
+          type uint32 {
+              range "0 .. 1048575";
+          }
+          description
+            "A 20-bit MPLS Label";
+        }
+      }
+      case offset-sid {
+        leaf offset-value {
+          type uint32;
+          description
+            "Offset into a label space advertised by this router.";
+        }
+      }
+      description
+        "Choice of either a 20-bit MPLS lable or 32-bit offset into
+         an advertised label space.";
+    }
+    description
+      "SID TLV Encoding -  20-bit label or 32-bit SID whose
+      interpretation is dependent on the TLV length (3 for an
+      MPLS label or 4 for a 32-bit value)  or the TLV V-Flag and
+      L-Flag settings:
+
+        If the  V-Flag is set to 0 and L-Flag is set to 0:
+        The SID/Index/Label field is a 4-octet index defining
+        the offset in the SID/Label space advertised by this
+        router.
+
+        If V-Flag is set to 1 and L-Flag is set to 1: The
+        ID/Index/Label field is a 3-octet local label where the
+        20 rightmost bits are used for encoding the label value.";
+  }
 
   grouping sid-tlv-encoding {
     description
@@ -725,7 +768,6 @@ module ietf-ospf-sr-mpls {
    * Augmentations for OSPF SR MPLS Configuration (read-write)
    * data nodes.
    */
-
   augment "/rt:routing/rt:control-plane-protocols"
         + "/rt:control-plane-protocol/ospf:ospf" {
     when "derived-from(/rt:routing/rt:control-plane-protocols/"
@@ -735,11 +777,9 @@ module ietf-ospf-sr-mpls {
     }
     description
       "This augments the OSPF protocol configuration with segment
-       routing over the MPLS data plane. The following semantic
+       routing for the MPLS data plane. The following semantic
        validation be performed for the configuration data:
         - Assure the binding policies prefixes do not overlapp.";
-    reference
-      "RFC 9020 - YANG Data Model for Segment Routing";
     uses sr-mpls:sr-control-plane;
     container protocol-srgb {
       if-feature "sr-mpls:protocol-srgb";
@@ -747,7 +787,9 @@ module ietf-ospf-sr-mpls {
       description
         "Per-protocol SRGB.";
     }
-  }
+    reference
+      "RFC 9020 - YANG Data Model for Segment Routing";
+}
 
   augment "/rt:routing/rt:control-plane-protocols/"
         + "rt:control-plane-protocol/ospf:ospf/"
@@ -824,6 +866,8 @@ module ietf-ospf-sr-mpls {
         }
       }
     }
+    reference
+      "RFC 9020 - YANG Data Model for Segment Routing";
   }
 
   augment "/rt:routing/rt:control-plane-protocols/"
@@ -928,8 +972,7 @@ module ietf-ospf-sr-mpls {
    * area, and interface level.
    */
   /* Augmentations for OSPFv2 LSAs. */
-
-  augment "/rt:routing/"
+   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol/"
         + "ospf:ospf/ospf:areas/"
         + "ospf:area/ospf:database/"
@@ -945,9 +988,6 @@ module ietf-ospf-sr-mpls {
     description
       "SR Extended Prefix Range TLV in OSPFv2 Type 10 (area-scoped)
        Extended Prefix Opaque LSAs.";
-    reference
-      "RFC 8665: OSPF Extensions for Segment Routing
-       (Section 4)";
     uses ospfv2-extended-prefix-range-tlvs;
   }
 
@@ -966,9 +1006,6 @@ module ietf-ospf-sr-mpls {
     description
       "SR Extended Prefix Range TLV in OSPFv2 Type 11 (AS-scoped)
        Extended Prefix Opaque LSAs.";
-    reference
-      "RFC 8665: OSPF Extensions for Segment Routing
-       (Section 4)";
     uses ospfv2-extended-prefix-range-tlvs;
   }
 
@@ -986,8 +1023,8 @@ module ietf-ospf-sr-mpls {
         "This augmentation is only valid for OSPFv2.";
     }
     description
-      "SR Prefix-SID sub-TLVs for OSPFv2 Extended Prefix TLVs
-       in OSPFv2 Type 10 (area-scoped) Extended Prefix Opaque LSAs.";
+     "SR Prefix-SID sub-TLVs for OSPFv2 Extended Prefix TLVs
+      in OSPFv2 Type 10 (area-scoped) Extended Prefix Opaque LSAs.";
     uses ospfv2-prefix-sid-sub-tlvs;
     reference
       "RFC 8665: OSPF Extensions for Segment Routing
@@ -1007,12 +1044,9 @@ module ietf-ospf-sr-mpls {
         "This augmentation is only valid for OSPFv2.";
     }
     description
-      "SR Prefix-SID sub-TLVs for OSPFv2 Extended Prefix TLVs
-       in OSPFv2 Type 11 (AS-scoped) Extended Prefix Opaque LSAs.";
-    reference
-      "RFC 8665: OSPF Extensions for Segment Routing
-        (Section 5)";
-    uses ospfv2-prefix-sid-sub-tlvs;
+     "SR Prefix-SID sub-TLVs for OSPFv2 Extended Prefix TLVs
+      in OSPFv2 Type 11 (AS-scoped) Extended Prefix Opaque LSAs.";
+   uses ospfv2-prefix-sid-sub-tlvs;
   }
 
   augment "/rt:routing/"
@@ -1029,13 +1063,109 @@ module ietf-ospf-sr-mpls {
         "This augmentation is only valid for OSPFv2.";
     }
     description
-      "SR TLVs for OSPFv2 Extended Link TLV in OSPFv2 Type 10
-       (area-scoped) Extended Link Opaque LSAs.";
-    reference
-      "RFC 8665: OSPF Extensions for Segment Routing
-        (Section 6)";
-    uses ospfv2-adj-sid-sub-tlvs;
-    uses ospfv2-lan-adj-sid-sub-tlvs;
+     "SR TLVs for OSPFv2 Extended Link TLV in OSPFv2 Type 10
+      (area-scoped) Extended Link Opaque LSAs.";
+    container adj-sid-sub-tlvs {
+      description
+        "Adj-SID optional sub-TLVs.";
+      list adj-sid-sub-tlv {
+        description
+          "List of Adj-SID sub-TLVs.";
+        container adj-sid-flags {
+          leaf-list flags {
+            type identityref {
+              base adj-sid-flag;
+            }
+            description
+              "Adj-SID sub-TLV flags.";
+          }
+          description
+            "Adj-SID sub-TLV flags.";
+        }
+        leaf mt-id {
+          type uint8;
+          description
+            "Multi-topology ID. Topologies range from 0-127 and
+             return of any other value would indicate an error.";
+          reference
+            "RFC 4915 - Multi-Topology (MT) Routing in OSPF";
+        }
+        leaf weight {
+          type uint8;
+          description
+            "Weight used for load-balancing.";
+        }
+        leaf sid {
+          type uint32;
+          description
+            "Segment Identifier (SID) - A 20 bit label or
+             an index into the SID/Label space.
+
+             If the  V-Flag is set to 0 and L-Flag is set to 0:
+             The SID/Index/Label field is a 4-octet index defining
+             the offset in the SID/Label space advertised by this
+             router.
+
+             If V-Flag is set to 1 and L-Flag is set to 1: The
+             SID/Index/Label field is a 3-octet local label where
+             the 20 rightmost bits are used for encoding the label
+             value.";
+        }
+      }
+    }
+    container lan-adj-sid-sub-tlvs {
+      description
+        "LAN Adj-SID optional sub-TLVs.";
+      list lan-adj-sid-sub-tlv {
+        description
+          "List of LAN Adj-SID sub-TLVs.";
+        container lan-adj-sid-flags {
+          leaf-list flags {
+            type identityref {
+              base adj-sid-flag;
+            }
+            description
+              "LAN Adj-SID sub-TLV flags.";
+          }
+          description
+            "LAN Adj-SID sub-TLV flags.";
+        }
+        leaf mt-id {
+          type uint8;
+          description
+            "Multi-topology ID. Topologies range from 0-127 and
+             return of any other value would indicate an error.";
+          reference
+            "RFC 4915 - Multi-Topology (MT) Routing in OSPF";
+        }
+        leaf weight {
+          type uint8;
+          description
+            "Weight used for load-balancing.";
+        }
+        leaf neighbor-router-id {
+          type rt-types:router-id;
+          description
+            "Neighbor router ID.";
+        }
+        leaf sid {
+          type uint32;
+          description
+            "Segment Identifier (SID) - A 20 bit label or
+             an index into the SID/Label space.
+
+             If the  V-Flag is set to 0 and L-Flag is set to 0:
+             The SID/Index/Label field is a 4-octet index defining
+             the offset in the SID/Label space advertised by this
+             router.
+
+             If V-Flag is set to 1 and L-Flag is set to 1: The
+             SID/Index/Label field is a 3-octet local label where
+             the 20 rightmost bits are used for encoding the label
+             value.";
+        }
+      }
+    }
   }
 
   augment "/rt:routing/"
@@ -1052,10 +1182,7 @@ module ietf-ospf-sr-mpls {
     }
     description
       "SR TLVs for OSPFv2 Router Information Type 10 (area-scoped)
-       Opaque LSAs";
-    reference
-      "RFC 8665: OSPF Extensions for Segment Routing
-        (Section 3)";
+      Opaque LSAs";
     uses sr-algorithm-tlv;
     uses sid-range-tlvs;
     uses local-block-tlvs;
@@ -1075,18 +1202,14 @@ module ietf-ospf-sr-mpls {
     }
     description
       "SR TLVs for OSPFv2 Router Information Type 11 (AS-scoped)
-       Opaque LSAs";
-    reference
-      "RFC 8665: OSPF Extensions for Segment Routing
-        (Section 3)";
+      Opaque LSAs";
     uses sr-algorithm-tlv;
     uses sid-range-tlvs;
     uses local-block-tlvs;
     uses srms-preference-tlv;
   }
 
-  /* Augmentations for OSPFv3 LSAs. */
-
+/* Augmentations for OSPFv3 LSAs. */
   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol/"
         + "ospf:ospf/ospf:database/"
@@ -1100,16 +1223,12 @@ module ietf-ospf-sr-mpls {
     }
     description
       "SR-specific TLVs for OSPFv3 Router Information LSA
-       (area-scoped).";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 4)";
+      (area-scoped).";
     uses sr-algorithm-tlv;
     uses sid-range-tlvs;
     uses local-block-tlvs;
     uses srms-preference-tlv;
   }
-
   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol/"
         + "ospf:ospf/ospf:areas/"
@@ -1124,10 +1243,7 @@ module ietf-ospf-sr-mpls {
     }
     description
       "SR-specific TLVs for OSPFv3 Router Information LSA
-       (AS-scoped).";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 4)";
+      (AS-scoped).";
     uses sr-algorithm-tlv;
     uses sid-range-tlvs;
     uses local-block-tlvs;
@@ -1148,7 +1264,7 @@ module ietf-ospf-sr-mpls {
     uses ospfv3-extended-prefix-range-tlvs;
     description
       "SR Extended Prefix Range TLVs in OSPFv3
-       E-Intra-Area-Prefix LSAs.";
+      E-Intra-Area-Prefix LSAs.";
   }
 
   augment "/rt:routing/"
@@ -1164,11 +1280,7 @@ module ietf-ospf-sr-mpls {
     }
     description
       "SR Extended Prefix Range TLVs in OSPFv3
-       E-Inter-Area-Prefix LSAs.";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 5)";
-    uses ospfv3-extended-prefix-range-tlvs;
+      E-Inter-Area-Prefix LSAs.";
   }
 
   augment "/rt:routing/"
@@ -1184,10 +1296,6 @@ module ietf-ospf-sr-mpls {
     }
     description
       "SR Extended Prefix Range TLVs in OSPFv3 E-AS-External LSAs.";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 5)";
-    uses ospfv3-extended-prefix-range-tlvs;
   }
 
   augment "/rt:routing/"
@@ -1203,10 +1311,6 @@ module ietf-ospf-sr-mpls {
     }
     description
       "SR Extended Prefix Range TLVs in OSPFv3 E-NSSA LSAs.";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 5)";
-    uses ospfv3-extended-prefix-range-tlvs;
   }
 
   augment "/rt:routing/"
@@ -1226,11 +1330,7 @@ module ietf-ospf-sr-mpls {
     }
     description
       "SR Prefix-SID Sub-TLV in OSPFv3 Intra-Area
-       Prefix TLV for OSPFv3 E-Link LSAs.";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 6)";
-    uses ospfv3-prefix-sid-sub-tlvs;
+      Prefix TLV for OSPFv3 E-Link LSAs.";
   }
 
   augment "/rt:routing/"
@@ -1251,10 +1351,6 @@ module ietf-ospf-sr-mpls {
     description
       "SR Prefix-SID Sub-TLV in OSPFv3 Intra-Area
        Prefix TLV for OSPFv3 E-Intra-Area-Prefix LSAs.";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 6)";
-    uses ospfv3-prefix-sid-sub-tlvs;
   }
 
   augment "/rt:routing/"
@@ -1274,10 +1370,6 @@ module ietf-ospf-sr-mpls {
     description
       "SR Prefix-SID Sub-TLV in OSPFv3 Link-Scoped Intra-Area
        Prefix TLV for OSPFv3 E-Inter-Area-Prefix LSAs.";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 6)";
-    uses ospfv3-prefix-sid-sub-tlvs;
   }
 
   augment "/rt:routing/"
@@ -1297,10 +1389,6 @@ module ietf-ospf-sr-mpls {
     description
       "SR Prefix-SID Sub-TLV in OSPFv3 External Prefix TLV
        for OSPFv3 E-AS-External LSAs.";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 6)";
-    uses ospfv3-prefix-sid-sub-tlvs;
   }
 
   augment "/rt:routing/"
@@ -1320,10 +1408,6 @@ module ietf-ospf-sr-mpls {
     description
       "SR Prefix-SID Sub-TLV in OSPFv3 External Prefix TLV
        for OSPFv3 E-NSSA LSAs.";
-    reference
-      "RFC 8666: OSPFv3 Extensions for Segment Routing
-       (Section 6)";
-    uses ospfv3-prefix-sid-sub-tlvs;
   }
 
   augment "/rt:routing/"
