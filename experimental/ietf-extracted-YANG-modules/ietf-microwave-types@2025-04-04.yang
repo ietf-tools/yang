@@ -13,12 +13,13 @@ module ietf-microwave-types {
       Min Ye (amy.yemin@huawei.com)
       Xi Li (Xi.Li@neclab.eu)
       Daniela Spreafico (daniela.spreafico@nokia.com)
-      Marko Vaupotic (Marko.Vaupotic@aviatnet.com)";
+      Marko Vaupotic (Marko.Vaupotic@aviatnet.com)
+      Danilo Pala (danilo.pala@siaemic.com)";
   description
     "This module contains a collection of YANG data types
      considered generally useful for microwave interfaces.
 
-     Copyright (c) 2024 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -36,28 +37,11 @@ module ietf-microwave-types {
   // replace the revision date with the module publication date
   // the format is (year-month-day)
 
-  revision 2024-03-03 {
+  revision 2025-04-04 {
     description
-      "pretty printing";
+      "Draft - Comression #32, new grouping Issue #35";
     reference
       "RFC XXX: A YANG Data Model for Microwave Radio Link";
-  }
-  revision 2023-10-06 {
-    description
-      "To add the summary of the changes in this revision:
-       - Changed name for 8PSK.
-
-       - Updated for 8PSK
-
-       - Updated with proposal for BCA.";
-    reference
-      "RFC XXX: A YANG Data Model for Microwave Radio Link";
-  }
-  revision 2019-06-19 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8561: A YANG Data Model for Microwave Radio Link";
   }
 
   /*
@@ -356,6 +340,15 @@ module ietf-microwave-types {
       "STM-1 connection, 155.52 Mbit/s.";
   }
 
+  typedef power {
+    type decimal64 {
+      fraction-digits 1;
+    }
+    description
+      "Type used for the power values in the data nodes
+       for configuration or status.";
+  }
+
   /*
    * Radio-link-terminal mode grouping
    */
@@ -376,6 +369,71 @@ module ietf-microwave-types {
       mandatory true;
       description
         "Number of protecting carriers.";
+    }
+  }
+
+  /*
+   * Common microwave properties ode grouping
+   */
+
+  grouping common-microwave-properties {
+    description
+      "This grouping provides a reusable set of microwave
+       properties.";
+    leaf tx-frequency {
+      type uint32;
+      units "kHz";
+      mandatory true;
+      description
+        "Selected transmitter frequency.";
+    }
+    leaf actual-rx-frequency {
+      type uint32;
+      units "kHz";
+      config false;
+      description
+        "Computed receiver frequency.";
+    }
+    leaf channel-separation {
+      type uint32;
+      units "kHz";
+      mandatory true;
+      description
+        "The amount of bandwidth allocated to a carrier.  The
+         distance between adjacent channels in a radio
+         frequency channels arrangement";
+      reference
+        "ETSI EN 302 217-1";
+    }
+    leaf actual-transmitted-level {
+      type power {
+        range "-99..99";
+      }
+      units "dBm";
+      config false;
+      description
+        "Actual transmitted power level (0.1 dBm resolution).";
+      reference
+        "ETSI EN 301 129";
+    }
+    leaf actual-tx-cm {
+      type identityref {
+        base mw-types:coding-modulation;
+      }
+      config false;
+      description
+        "Actual coding/modulation in transmitting direction.";
+    }
+    leaf actual-snir {
+      type decimal64 {
+        fraction-digits 1;
+        range "0..99";
+      }
+      units "dB";
+      config false;
+      description
+        "Actual signal to noise plus the interference ratio
+         (0.1 dB resolution).";
     }
   }
 }

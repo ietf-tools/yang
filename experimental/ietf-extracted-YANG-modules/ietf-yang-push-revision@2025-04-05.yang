@@ -57,23 +57,28 @@ module ietf-yang-push-revision {
                <mailto:alex.huang-feng@insa-lyon.fr>";
 
   description
-    "Defines YANG push event notification header with the revision and
+    "Defines YANG-Push event notification header with the revision and
     the revision-label. Adds the support of the revision and
-    revision-label selection in the YANG push subscription RPCs.
+    revision-label selection in the YANG-Push subscription RPCs.
 
-    Copyright (c) 2023 IETF Trust and the persons identified as
-    authors of the code.  All rights reserved.
+    Copyright (c) 2025 IETF Trust and the persons
+    identified as authors of the code.  All rights reserved.
 
-    Redistribution and use in source and binary forms, with or without
-    modification, is permitted pursuant to, and subject to the license
-    terms contained in, the Revised BSD License set forth in Section
-    4.c of the IETF Trust's Legal Provisions Relating to IETF Documents
+    Redistribution and use in source and binary forms, with or
+    without modification, is permitted pursuant to, and subject
+    to the license terms contained in, the Revised BSD License
+    set forth in Section 4.c of the IETF Trust's Legal Provisions
+    Relating to IETF Documents
     (https://trustee.ietf.org/license-info).
+
+    All revisions of IETF and IANA published modules can be found
+    at the YANG Parameters registry
+    (https://www.iana.org/assignments/yang-parameters).
 
     This version of this YANG module is part of RFC XXXX; see the RFC
     itself for full legal notices.";
 
-  revision 2024-12-17 {
+  revision 2025-04-05 {
     description
       "First revision";
     reference
@@ -102,7 +107,8 @@ module ietf-yang-push-revision {
     base sn:modify-subscription-error;
     description
       "Revision-label not supported.  This failure can be due to 
-      subscribing to a specific revision-label not supported by the publisher.";
+      subscribing to a specific revision-label not supported by the
+      publisher.";
   }
 
   identity incompatible-revision-and-revision-label {
@@ -135,8 +141,8 @@ module ietf-yang-push-revision {
     leaf revision-label {
       type ysver:version;
       description
-        "This references the YANG module semantic version to be sent in the
-        subscription.";
+        "This references the YANG module semantic version to be sent in
+        the subscription.";
     }
   }
 
@@ -144,7 +150,7 @@ module ietf-yang-push-revision {
     description
       "This grouping combines the module name, the revision and
       revision-label leaves. This grouping is to be used for
-      read-only cases such as the content of YANG push Notifications.
+      read-only cases such as the content of YANG-Push Notifications.
       The module-name and revision are mandatory and MUST be present
       in the data.";
     leaf module-name {
@@ -183,7 +189,7 @@ module ietf-yang-push-revision {
       uses ypr:yang-push-module-version;
     }
     leaf yang-library-content-id {
-	  config false;
+    config false;
       type leafref {
         path "/yanglib:yang-library/yanglib:content-id";
       }
@@ -260,10 +266,11 @@ module ietf-yang-push-revision {
       type boolean;
       description
         "Specifies whether the publisher supports exporting
-        revision and revision-label in YANG-Push subscription state change
-	notifications.";
+        revision and revision-label in YANG-Push subscription state
+        change notifications.";
       reference
-        "RFC XXXX: Support of Versioning in YANG Notifications Subscription";
+        "RFC XXXX: Support of Versioning in YANG Notifications
+        Subscription";
     }
   }
 }

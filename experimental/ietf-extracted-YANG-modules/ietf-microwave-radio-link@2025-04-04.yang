@@ -37,12 +37,13 @@ module ietf-microwave-radio-link {
       Min Ye (amy.yemin@huawei.com)
       Xi Li (Xi.Li@neclab.eu)
       Daniela Spreafico (daniela.spreafico@nokia.com)
-      Marko Vaupotic (Marko.Vaupotic@aviatnet.com)";
+      Marko Vaupotic (Marko.Vaupotic@aviatnet.com)
+      Danilo Pala (danilo.pala@siaemic.com)";
   description
     "This is a module for the entities in
      a generic microwave system.
 
-     Copyright (c) 2024 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -60,29 +61,13 @@ module ietf-microwave-radio-link {
   // replace the revision date with the module publication date
   // the format is (year-month-day)
 
-  revision 2024-03-03 {
+  revision 2025-04-04 {
     description
-      "pretty printing";
+      "Draft - Issue #32 Compression,
+               Issue #35 grouping common-microwave-properties,
+               Issue #31 added minimum-nominal-power";
     reference
       "RFC XXX: A YANG Data Model for Microwave Radio Link";
-  }
-  revision 2023-10-06 {
-    description
-      "To add the summary of the changes in this revision:
-
-       - more updates related to git Issue #13 and #16.
-
-       - git Issue #13 and #16 and discussion updates for acm-profile
-
-       - Updated with proposal for BCA.";
-    reference
-      "RFC XXX: A YANG Data Model for Microwave Radio Link";
-  }
-  revision 2019-06-19 {
-    description
-      "Initial revision.";
-    reference
-      "RFC 8561: A YANG Data Model for Microwave Radio Link";
   }
 
   /*
@@ -108,18 +93,15 @@ module ietf-microwave-radio-link {
       "Indicates that the device supports TDM.";
   }
 
+  feature header-compression {
+    description
+      "Indicates that the device supports Header Compression
+       profiles.";
+  }
+
   /*
    * Typedefs
    */
-
-  typedef power {
-    type decimal64 {
-      fraction-digits 1;
-    }
-    description
-      "Type used for the power values in the data nodes
-       for configuration or status.";
-  }
 
   grouping acm-profile {
     description
@@ -143,15 +125,25 @@ module ietf-microwave-radio-link {
         "True when the profile can be used in single
          coding-modulation-mode.";
     }
+    leaf support-as-reference-modulation {
+      type boolean;
+      description
+        " 'true' when the profile can be used to configure the
+          reference-modulation in adaptive coding-modulation-mode.
+          Otherwise the value is 'false' and the reference-modulation
+          to use cannot be configured 
+          (it could be selected automatically by the system).
+        ";
+    }
     leaf max-tx-power {
-      type power;
+      type mw-types:power;
       description
         "The maximum transmitted power when the carrier termination
          is operating this acm-profile.  Used to configure
          transmitted power.";
     }
     leaf min-tx-power {
-      type power;
+      type mw-types:power;
       description
         "The minimum transmitted power when the carrier termination
          is operating this acm-profile.  Used to configure
@@ -280,6 +272,62 @@ module ietf-microwave-radio-link {
           "Number of connections of the specified type.";
       }
     }
+    container header-compression {
+      if-feature "header-compression";
+      description
+        "Configuration of Header Compression ";
+      list supported-profile {
+        key "name";
+        config false;
+        description
+        "The list of header compression profiles supported by the
+         RLT.
+         Header compression is typically vendor proprietary and it is
+         assumed there is no ambition to change that. For this reason
+         the list provides only generic attributes to be augmented by
+         vendor with proprietary implementation attributes.";
+        leaf name {
+          type string;
+          description
+            "A name that uniquely identifies the header compression
+             profile in an RLT.";
+        }
+        leaf description {
+          type string;
+          description
+            "Detailed description of the profile.";
+        }
+      }
+      leaf configured-profile {
+        type leafref {
+          path "../mrl:supported-profile/mrl:name";
+          require-instance false;
+        }
+        description
+          "Select the profile of header compression to be used.";
+      }
+      leaf enabled {
+        type boolean;
+        description
+          "Disables (false) or enables (true) the header
+           compression.";
+      }
+      leaf oper-status {
+        type enumeration {
+          enum off {
+            description
+              "Header compression is off.";
+          }
+          enum on {
+            description
+              "Header compression is on.";
+          }
+        }
+        config false;
+        description
+          "Shows the operative status of the header compression.";
+      }
+    }
   }
 
   /*
@@ -332,13 +380,9 @@ module ietf-microwave-radio-link {
       description
         "Shows the operative status of the transmitter.";
     }
-    leaf tx-frequency {
-      type uint32;
-      units "kHz";
-      mandatory true;
-      description
-        "Selected transmitter frequency.";
-    }
+
+    uses mw-types:common-microwave-properties;
+
     choice freq-or-distance {
       mandatory true;
       description
@@ -357,30 +401,12 @@ module ietf-microwave-radio-link {
           "Distance between transmitter and receiver frequencies.";
       }
     }
-    leaf actual-rx-frequency {
-      type uint32;
-      units "kHz";
-      config false;
-      description
-        "Computed receiver frequency.";
-    }
     leaf actual-duplex-distance {
       type uint32;
       units "kHz";
       config false;
       description
         "Computed distance between Tx and Rx frequencies.";
-    }
-    leaf channel-separation {
-      type uint32;
-      units "kHz";
-      mandatory true;
-      description
-        "The amount of bandwidth allocated to a carrier.  The
-         distance between adjacent channels in a radio
-         frequency channels arrangement";
-      reference
-        "ETSI EN 302 217-1";
     }
     leaf polarization {
       type enumeration {
@@ -411,7 +437,7 @@ module ietf-microwave-radio-link {
         reference
           "ETSI EN 302 217-1";
         leaf maximum-nominal-power {
-          type power {
+          type mw-types:power {
             range "-99..99";
           }
           units "dBm";
@@ -428,20 +454,30 @@ module ietf-microwave-radio-link {
         reference
           "ETSI EN 302 217-1";
         leaf maximum-nominal-power {
-          type power {
+          type mw-types:power {
             range "-99..99";
           }
           units "dBm";
           mandatory true;
           description
-            "Selected maximum output power.  Minimum output
-             power is the same as the system capability,
-             minimum-power.";
+            "Nominal maximum output power.";
           reference
             "ETSI EN 302 217-1";
         }
+        leaf minimum-nominal-power {
+          type mw-types:power {
+            range "-99..99";
+          }
+          units "dBm";
+          mandatory true;
+          description
+            "Minimum output power.
+
+             By default, minimum output power is the same as the
+             system capability minimum-power.";
+        }
         leaf atpc-lower-threshold {
-          type power {
+          type mw-types:power {
             range "-99..-20";
           }
           units "dBm";
@@ -454,7 +490,7 @@ module ietf-microwave-radio-link {
             "ETSI EN 302 217-1";
         }
         leaf atpc-upper-threshold {
-          type power {
+          type mw-types:power {
             range "-99..-20";
           }
           units "dBm";
@@ -467,19 +503,8 @@ module ietf-microwave-radio-link {
         }
       }
     }
-    leaf actual-transmitted-level {
-      type power {
-        range "-99..99";
-      }
-      units "dBm";
-      config false;
-      description
-        "Actual transmitted power level (0.1 dBm resolution).";
-      reference
-        "ETSI EN 301 129";
-    }
     leaf actual-received-level {
-      type power {
+      type mw-types:power {
         range "-99..-20";
       }
       units "dBm";
@@ -533,26 +558,24 @@ module ietf-microwave-radio-link {
              Adaptive coding/modulation shall not go
              above this value.";
         }
+        leaf reference-modulation {
+          type identityref {
+            base mw-types:coding-modulation;
+          }
+          description
+            "the reference-modulation is the coding modulation to be
+             used in the reference mode, as defined in
+             ETSI EN 302 217-1 V3.2.2 (2020-02). 
+             The reference mode identifies the operative mode which
+             characteristics (i.e. system capacity, spectral
+             efficiency class over a given channel separation) are
+             used (i.e. declared in the licensing process) in the
+             link per link coordination analysis. Its value has to be
+             between the 'selected-min-acm' and the
+             'selected-max-acm' attribute's values.
+         ";
+        }
       }
-    }
-    leaf actual-tx-cm {
-      type identityref {
-        base mw-types:coding-modulation;
-      }
-      config false;
-      description
-        "Actual coding/modulation in transmitting direction.";
-    }
-    leaf actual-snir {
-      type decimal64 {
-        fraction-digits 1;
-        range "0..99";
-      }
-      units "dB";
-      config false;
-      description
-        "Actual signal to noise plus the interference ratio
-         (0.1 dB resolution).";
     }
     leaf actual-xpi {
       if-feature "xpic";
@@ -573,7 +596,7 @@ module ietf-microwave-radio-link {
         "Specification of thresholds for when alarms should
          be sent and cleared for various performance counters.";
       leaf received-level-alarm-threshold {
-        type power {
+        type mw-types:power {
           range "-99..-20";
         }
         units "dBm";
@@ -585,7 +608,7 @@ module ietf-microwave-radio-link {
           "ETSI EN 301 129";
       }
       leaf transmitted-level-alarm-threshold {
-        type power {
+        type mw-types:power {
           range "-99..99";
         }
         units "dBm";
@@ -715,7 +738,7 @@ module ietf-microwave-radio-link {
           "Maximum Tx frequency possible to use.";
       }
       leaf minimum-power {
-        type power;
+        type mw-types:power;
         units "dBm";
         description
           "The minimum output power supported.";
@@ -723,7 +746,7 @@ module ietf-microwave-radio-link {
           "ETSI EN 302 217-1";
       }
       leaf maximum-available-power {
-        type power;
+        type mw-types:power;
         units "dBm";
         description
           "The maximum output power supported.";
@@ -808,11 +831,10 @@ module ietf-microwave-radio-link {
           }
           leaf profile-channel-separation-id-ref {
             type leafref {
-              path
-                "../../.."
-              + "/acm-profile-list[profile-coding-modulation-id="
-              + "current()/../profile-coding-modulation-id-ref]"
-              + "/profile-channel-separation-id";
+              path "../../.."
+                 + "/acm-profile-list[profile-coding-modulation-id="
+                 + "current()/../profile-coding-modulation-id-ref]"
+                 + "/profile-channel-separation-id";
             }
             description
               "A reference to an acm-profile to give an order in
@@ -845,11 +867,10 @@ module ietf-microwave-radio-link {
           }
           leaf profile-channel-separation-id-ref {
             type leafref {
-              path
-                "../../.."
-              + "/acm-profile-list[profile-coding-modulation-id="
-              + "current()/../profile-coding-modulation-id-ref]"
-              + "/profile-channel-separation-id";
+              path "../../.."
+                 + "/acm-profile-list[profile-coding-modulation-id="
+                 + "current()/../profile-coding-modulation-id-ref]"
+                 + "/profile-channel-separation-id";
             }
             description
               "A reference to an acm-profile to give an order in
@@ -924,7 +945,7 @@ module ietf-microwave-radio-link {
         "ETSI EN 301 129 radio physical interface statistics relevant
          for a carrier termination.";
       leaf min-rltm {
-        type power {
+        type mw-types:power {
           range "-99..-20";
         }
         units "dBm";
@@ -938,7 +959,7 @@ module ietf-microwave-radio-link {
           "ETSI EN 301 129";
       }
       leaf max-rltm {
-        type power {
+        type mw-types:power {
           range "-99..-20";
         }
         units "dBm";
@@ -952,7 +973,7 @@ module ietf-microwave-radio-link {
           "ETSI EN 301 129";
       }
       leaf min-tltm {
-        type power {
+        type mw-types:power {
           range "-99..99";
         }
         units "dBm";
@@ -966,7 +987,7 @@ module ietf-microwave-radio-link {
           "ETSI EN 301 129";
       }
       leaf max-tltm {
-        type power {
+        type mw-types:power {
           range "-99..99";
         }
         units "dBm";
