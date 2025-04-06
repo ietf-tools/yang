@@ -91,7 +91,7 @@ module ietf-ospf-sr-mpls {
   // RFC Ed.: Replace XXXX with actual RFC number and remove
   // this note
 
-  revision 2025-04-02 {
+  revision 2025-04-04 {
     description
       "Initial revision.";
     reference
@@ -100,8 +100,8 @@ module ietf-ospf-sr-mpls {
   }
 
   // RFC Ed.: Replace XXXX with actual RFC number.
-  // Also, replace '2025-04-02' with the module publication date
-  // the format is (YYYY-MM-DD) and remove this note.
+  // Also, replace '2025-04-04' with the module publication date
+  // in the format (YYYY-MM-DD) and remove this note.
 
   feature remote-lfa-sr {
     description
@@ -246,7 +246,7 @@ module ietf-ospf-sr-mpls {
 
   grouping sid-tlv-encoding {
     description
-      "SID TLV Encoding -  20-bit label or 32-bit SID whose
+      "SID TLV Encoding -  20-bit label or 32-bit SID index whose
        interpretation is dependent on the TLV length (3 for an
        MPLS label or 4 for a 32-bit value)  or the TLV V-Flag and
        L-Flag settings:
@@ -263,7 +263,7 @@ module ietf-ospf-sr-mpls {
       "RFC 8665: OSPF Extensions for Segment Routing, Section 5
        RFC 8666: OSPFv3 Extensions for Segment Routing, Section 3";
     choice sid-value {
-      case label-sid {
+      case sid-label {
         leaf label-value {
           type uint32 {
             range "0 .. 1048575";
@@ -272,15 +272,15 @@ module ietf-ospf-sr-mpls {
             "A 20-bit MPLS Label";
         }
       }
-      case offset-sid {
-        leaf offset-value {
+      case sid-index {
+        leaf index-value {
           type uint32;
           description
-            "Offset into a label space advertised by this router.";
+            "Index into a label space advertised by this router.";
         }
       }
       description
-        "Choice of either a 20-bit MPLS lable or 32-bit offset into
+        "Choice of either a 20-bit MPLS label or 32-bit index into
          an advertised label space.";
     }
   }
@@ -290,7 +290,7 @@ module ietf-ospf-sr-mpls {
       "SID/Label sub-TLV grouping.";
     reference
       "RFC 8665: OSPF Extensions for Segment Routing
-       (Section 6)";
+       (Section 2.1)";
     container sid-sub-tlv {
       description
         "Used to advertise the SID/Label associated with a
@@ -517,8 +517,7 @@ module ietf-ospf-sr-mpls {
        (Section 3.2)";
     container sid-range-tlvs {
       description
-        "List of SID range TLVs. Note that the order of advertised
-         SID ranges is implementation dependent.";
+        "List of SID range TLVs.";
       list sid-range-tlv {
         description
           "SID range TLV.";
