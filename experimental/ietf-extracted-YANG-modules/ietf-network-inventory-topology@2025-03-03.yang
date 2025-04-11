@@ -30,12 +30,12 @@ module ietf-network-inventory-topology {
 
      Editor: Bo Wu
              <lana.wubo@huawei.com>
-     Editor: Cheng Zhou
-             <zhouchengyjy@chinamobile.com>
-     Editor: Qin Wu
-             <bill.wu@huawei.com>
      Editor: Mohamed Boucadair
-             <mohamed.boucadair@orange.com>";
+             <mohamed.boucadair@orange.com>
+     Author: Cheng Zhou
+             <zhouchengyjy@chinamobile.com>
+     Author: Qin Wu
+             <bill.wu@huawei.com>";
   description
     "This YANG module defines a YANG module for network
      topology and inventory mapping.
@@ -54,7 +54,7 @@ module ietf-network-inventory-topology {
      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC
      itself for full legal notices.";
 
-  revision 2025-02-04 {
+  revision 2025-03-03 {
     description
       "Initial revision.";
     reference
@@ -62,100 +62,63 @@ module ietf-network-inventory-topology {
                  Topology";
   }
 
-  /* Identities */
-  /* Typedef */
+  /* features */
 
-  // To be moved to the base IVY model
-
-  typedef ne-ref {
-    type leafref {
-      path "/nwi:network-inventory/nwi:network-elements"
-         + "/nwi:network-element/nwi:ne-id";
-    }
+  feature inventory-to-topology-navigate {
     description
-      "This type is used by data models that need to reference
-       Network Element.";
+      "Indicates support for navigating from inventory to topology.";
+  }
+
+  feature topology-to-inventory-navigate {
+    description
+      "Indicates support for navigating from topology to inventory.";
   }
 
   /* Groupings */
+  /* Node Grouping Feature with 1:1 mapping to NE*/
 
-  grouping inventory-mapping-network-type {
-    description
-      "Indicates the topology type to be Network Inventory
-       mapping.";
-    container network-inventory-mapping {
-      presence "Indicates Network Inventory mapping topology.";
-      description
-        "The presence of the container node indicates
-         Network Inventory mapping.";
-    }
-  }
-
-  grouping policies-target-point {
-    description
-      "Indicates system configuration or state mount point.";
-    container policies-target-point {
-      description
-        "Container for device-specific policy (e.g., ACL policies)
-         configuration or retrieval, which serves as an augmentation
-         target.";
-    }
-  }
-
-  grouping node-inventory-attributes {
+  grouping node-inventory-feature-attributes {
     description
       "Network Inventory mapping node scope attributes";
     container inventory-mapping-attributes {
+      if-feature "topology-to-inventory-navigate";
       description
         "The container node attributes of Network Inventory
          mapping.";
       leaf ne-ref {
-        type ne-ref;
+        type nwi:ne-ref;
         config false;
         description
-          "The reference of the Network Element (NE) from which this
+          "1:1 mapping to the Network Element (NE) from which this
            node is abstracted.";
       }
-      uses policies-target-point;
     }
   }
 
-  grouping termination-point-inventory-attributes {
+  grouping tp-inventory-feature-attributes {
     description
       "Network Inventory mapping Termination Point (TP) scope
        attributes";
     container inventory-mapping-attributes {
+      if-feature "topology-to-inventory-navigate";
       description
         "Specifies the TP attributes of Network Inventory mapping.";
-      leaf port-component-ref {
-        type leafref {
-          path
-            "/nwi:network-inventory/nwi:network-elements"
-          + "/nwi:network-element[nwi:ne-id=current()/../../../"
-          + "inventory-mapping-attributes/ne-ref]/nwi:components"
-          + "/nwi:component/nwi:component-id";
-        }
-        config false;
-        description
-          "The reference of the port component from which this
-           termination point is abstracted.";
-      }
-      leaf-list interface-name {
+      /* 1:1 mapping to physical port component */
+      uses nwi:port-ref;
+      leaf physical-interface-name {
         type string;
         config false;
         description
-          "Name of the interface.  The name can (but does not
-           have to) correspond to an interface reference of a
-           containing node's interface.";
+          "1:1 mapping to physical interface name (e.g., eth0/1)";
       }
-      uses policies-target-point;
     }
   }
 
-  grouping link-inventory-attributes {
+  grouping link-inventory-feature-attributes {
     description
       "Network Inventory mapping link scope attributes.";
     container inventory-mapping-attributes {
+      if-feature "topology-to-inventory-navigate";
       description
         "Specifies  the link attributes of network inventory
          mapping.";
@@ -177,46 +140,34 @@ module ietf-network-inventory-topology {
 
   /* Main blocks */
 
-  augment "/nw:networks/nw:network/nw:network-types" {
-    description
-      "Introduces new network type for network inventory mapping.";
-    uses inventory-mapping-network-type;
-  }
-
   augment "/nw:networks/nw:network/nw:node" {
-    when '/nw:networks/nw:network/nw:network-types/
-   nwit:network-inventory-mapping' {
-      description
-        "Augmentation parameters apply only for network inventory
-         mapping.";
-    }
     description
       "Groups parameters for inventory at the node level.";
-    uses node-inventory-attributes;
+    uses node-inventory-feature-attributes;
   }
 
   augment "/nw:networks/nw:network/nt:link" {
-    when '/nw:networks/nw:network/nw:network-types/
-     nwit:network-inventory-mapping' {
-      description
-        "Augmentation parameters apply only for network
-         inventory.";
-    }
     description
       "Augments inventory topology link information.";
-    uses link-inventory-attributes;
+    uses link-inventory-feature-attributes;
   }
 
-  augment
-    "/nw:networks/nw:network/nw:node/nt:termination-point" {
-      when '/nw:networks/nw:network/nw:network-types/
-     nwit:network-inventory-mapping' {
-        description
-          "Augmentation parameters apply only for network
-           inventory.";
-      }
-      description
-        "Augments inventory termination point information.";
-      uses termination-point-inventory-attributes;
+  augment "/nw:networks/nw:network/nw:node/nt:termination-point" {
+    description
+      "Augments inventory termination point information.";
+    uses tp-inventory-feature-attributes;
+  }
+
+  /* Augment the network-inventory to add 
+     topology navigate */
+
+  augment "/nwi:network-inventory/nwi:network-elements"
+        + "/nwi:network-element" {
+    if-feature "inventory-to-topology-navigate";
+    description
+      "Augments the network element with 1:1 mapping with the network
+          the element is part of.";
+    uses nw:node-ref;
   }
 }
+
