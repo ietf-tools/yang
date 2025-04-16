@@ -91,7 +91,7 @@ module ietf-ospf-sr-mpls {
   // RFC Ed.: Replace XXXX with actual RFC number and remove
   // this note
 
-  revision 2025-04-04 {
+  revision 2025-04-14 {
     description
       "Initial revision.";
     reference
@@ -100,7 +100,7 @@ module ietf-ospf-sr-mpls {
   }
 
   // RFC Ed.: Replace XXXX with actual RFC number.
-  // Also, replace '2025-04-04' with the module publication date
+  // Also, replace '2025-04-14' with the module publication date
   // in the format (YYYY-MM-DD) and remove this note.
 
   feature remote-lfa-sr {
@@ -262,7 +262,7 @@ module ietf-ospf-sr-mpls {
     reference
       "RFC 8665: OSPF Extensions for Segment Routing, Section 5
        RFC 8666: OSPFv3 Extensions for Segment Routing, Section 3";
-    choice sid-value {
+    choice sid {
       case sid-label {
         leaf label-value {
           type uint32 {
