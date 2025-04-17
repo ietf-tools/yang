@@ -38,7 +38,7 @@ module iana-bfd-types {
     "RFC 9127: YANG Data Model for Bidirectional Forwarding
      Detection (BFD)";
 
-  revision 2025-03-02 {
+  revision 2025-04-16 {
     description
       "Add NULL and Meticulous ISAAC authentication type.";
     reference
@@ -122,7 +122,6 @@ module iana-bfd-types {
     reference
       "RFC 5880: Bidirectional Forwarding Detection (BFD)";
   }
-
   typedef auth-type {
     type enumeration {
       enum reserved {
