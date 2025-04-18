@@ -90,7 +90,7 @@ module ietf-isis-sr-mpls {
   // RFC Ed.: Replace XXXX with actual RFC number and remove
   // this note
 
-  revision 2025-04-14 {
+  revision 2025-04-15 {
     description
       "Initial revision.";
     reference
@@ -518,37 +518,41 @@ module ietf-isis-sr-mpls {
        for adjacencies.";
     reference
       "RFC 8667: IS-IS Extensions for Segment Routing, Section 2.2";
-    list sid-list {
+    container adj-sid-sub-tlvs {
       description
-        "List of segments.";
-      container adj-sid-flags {
+        "Adj-SID optional sub-TLVs.";
+      list adj-sid-sub-tlv {
         description
-          "Adj-SID sub-TLV flags.";
-        leaf-list flag {
-          type identityref {
-            base adj-sid-flag;
-          }
+          "List of segments.";
+        container adj-sid-flags {
           description
-            "Adj-SID sub-TLV flags list.";
+            "Adj-SID sub-TLV flags.";
+          leaf-list flag {
+            type identityref {
+              base adj-sid-flag;
+            }
+            description
+              "Adj-SID sub-TLV flags list.";
+          }
         }
-      }
-      leaf weight {
-        type uint8;
-        description
-          "The value represents the weight of the Adj-SID
-           for the purpose of load balancing.";
-      }
-      leaf neighbor-id {
-        type isis:system-id;
-        description
-          "Describes the system ID of the neighbor
-           associated with the SID value. This is only
-           used on LAN adjacencies.";
-      }
-      leaf sid {
-        type uint32;
-        description
-          "Value of the Adj-SID.";
+        leaf weight {
+          type uint8;
+          description
+            "The value represents the weight of the Adj-SID
+             for the purpose of load balancing.";
+        }
+        leaf neighbor-id {
+          type isis:system-id;
+          description
+            "Describes the system ID of the neighbor
+             associated with the SID value. This is only
+             used on LAN adjacencies.";
+        }
+        leaf sid {
+          type uint32;
+          description
+            "Value of the Adj-SID.";
+        }
       }
     }
   }
@@ -806,8 +810,8 @@ module ietf-isis-sr-mpls {
   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol"
         + "/isis:isis/isis:database/isis:levels/isis:lsp"
-        + "/isis:router-capabilities" {
-    when "derived-from-or-self(../../../../../rt:type,"
+        + "/isis:router-capabilities/isis:router-capability" {
+    when "derived-from-or-self(../../../../../../rt:type,"
        + "'isis:isis')" {
       description
         "This augments ISIS routing protocol when used";
@@ -823,8 +827,9 @@ module ietf-isis-sr-mpls {
   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol"
         + "/isis:isis/isis:database/isis:levels/isis:lsp"
-        + "/isis:extended-is-neighbor/isis:neighbor" {
-    when "derived-from-or-self(../../../../../../rt:type,"
+        + "/isis:extended-is-neighbor/isis:neighbor/isis:instances"
+        + "/isis:instance" {
+    when "derived-from-or-self(../../../../../../../../rt:type,"
        + "'isis:isis')" {
       description
         "This augments ISIS routing protocol when used";
@@ -837,8 +842,9 @@ module ietf-isis-sr-mpls {
   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol"
         + "/isis:isis/isis:database/isis:levels/isis:lsp"
-        + "/isis:mt-is-neighbor/isis:neighbor" {
-    when "derived-from-or-self(../../../../../../rt:type,"
+        + "/isis:mt-is-neighbor/isis:neighbor/isis:instances"
+        + "/isis:instance" {
+    when "derived-from-or-self(../../../../../../../../rt:type,"
        + "'isis:isis')" {
       description
         "This augments ISIS routing protocol when used";
@@ -861,6 +867,7 @@ module ietf-isis-sr-mpls {
       "This augments ISIS protocol LSDB prefix.";
     uses prefix-sid-sub-tlv;
   }
+
   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol"
         + "/isis:isis/isis:database/isis:levels/isis:lsp"
@@ -902,7 +909,6 @@ module ietf-isis-sr-mpls {
       "This augments ISIS protocol LSDB prefix.";
     uses prefix-sid-sub-tlv;
   }
-
   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol"
         + "/isis:isis/isis:database/isis:levels/isis:lsp" {
