@@ -183,10 +183,10 @@ module ietf-ospf-sr-mpls {
   identity ia-flag {
     base extended-prefix-range-flag;
     description
-      "Inter-Area flag.";
+      "Inter-Area flag. Note that this is only applicable to OSPFv2
+       since OSPFv3 advertises separate Inter-Area extended-LSA.";
     reference
-      "RFC 8665: OSPF Extensions for Segment Routing, Section 4
-       RFC 8666: OSPFv3 Extensions for Segment Routing, Section 5";
+      "RFC 8665: OSPF Extensions for Segment Routing, Section 4";
   }
 
   identity adj-sid-flag {
@@ -334,8 +334,7 @@ module ietf-ospf-sr-mpls {
             range "0 .. 127";
           }
           description
-            "Multi-topology ID. Topologies range from 0-127 and
-             return of any other value would indicate an error.";
+            "Multi-topology ID.";
           reference
             "RFC 4915: Multi-Topology (MT) Routing in OSPF";
         }
