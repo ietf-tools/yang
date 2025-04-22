@@ -39,8 +39,7 @@ module ietf-pcep-srpolicy {
     "The YANG module augments the Path Computation Element
      Communications Protocol (PCEP) YANG model with Segment
      Routing (SR) Policy.
-
-     Copyright (c) 2024 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -52,7 +51,8 @@ module ietf-pcep-srpolicy {
 
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
-  revision 2024-10-19 {
+
+  revision 2025-04-21 {
     description
       "Initial revision.";
     reference
@@ -95,9 +95,7 @@ module ietf-pcep-srpolicy {
         "RFC 9256: Segment Routing Policy Architecture";
     }
     leaf color {
-      type uint32 {
-        range "1..max";
-      }
+      type sr-policy-types:color-type;
       description
         "SR Policy Color";
       reference
@@ -111,7 +109,7 @@ module ietf-pcep-srpolicy {
         "RFC 9256: Segment Routing Policy Architecture";
     }
     leaf name {
-      type string;
+      type sr-policy-types:name-type;
       description
         "SR Policy name";
       reference
