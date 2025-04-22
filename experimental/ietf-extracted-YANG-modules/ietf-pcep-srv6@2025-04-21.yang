@@ -14,6 +14,12 @@ module ietf-pcep-srv6 {
     reference
       "RFC 8776: Common YANG Data Types for Traffic Engineering";
   }
+  import iana-msd-types {
+    prefix iana-msd-types;
+    reference
+      "RFC 9702: YANG Data Model for Maximum Segment Identifier (SID)
+       Depth Types and MPLS Maximum SID Depth";
+  }
   import ietf-pcep {
     prefix pcep;
     reference
@@ -35,7 +41,7 @@ module ietf-pcep-srv6 {
      Communications Protocol (PCEP) YANG operational model
      with Segment Routing in IPv6 (SRv6).
 
-     Copyright (c) 2024 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -48,7 +54,7 @@ module ietf-pcep-srv6 {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2024-10-19 {
+  revision 2025-04-21 {
     description
       "Initial revision.";
     reference
@@ -97,9 +103,14 @@ module ietf-pcep-srv6 {
     description
       "SRv6 MSD";
     leaf msd-type {
-      type uint8;
+      type identityref {
+        base iana-msd-types:msd-base-srh;
+      }
       description
         "SRv6 Maximum Segment Depth (MSD) Type";
+      reference
+        "RFC 9702: YANG Data Model for Maximum Segment Identifier (SID)
+         Depth Types and MPLS Maximum SID Depth";
     }
     leaf msd-value {
       type uint8;
