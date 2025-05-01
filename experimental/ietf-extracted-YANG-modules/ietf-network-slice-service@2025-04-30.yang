@@ -97,7 +97,7 @@ module ietf-network-slice-service {
      This version of this YANG module is part of RFC AAAA; see the
      RFC itself for full legal notices.";
 
-  revision 2025-02-06 {
+  revision 2025-04-30 {
     description
       "Initial revision.";
     reference
@@ -140,7 +140,7 @@ module ietf-network-slice-service {
 
   identity attachment-circuit-tag-type {
     description
-      "Base identity for the attachment circuit tag type.";
+      "Base identity for the Attachment Circuit tag type.";
   }
 
   identity vlan-id {
@@ -280,8 +280,8 @@ module ietf-network-slice-service {
     base service-slo-metric-type;
     description
       "The shared SLO bandwidth bound. It is the limit on the
-       bandwidth that can be shared amongst a group of
-       connectivity constructs of a Slice Service.";
+       bandwidth that can be shared among a group of
+       Connectivity Constructs of a Slice Service.";
   }
 
   identity one-way-delay-maximum {
@@ -554,12 +554,11 @@ module ietf-network-slice-service {
   /* Typedef */
 
   typedef percentage {
-    type decimal64 {
-      fraction-digits 5;
+    type uint8 {
       range "0..100";
     }
     description
-      "Percentage to 5 decimal places.";
+      "Integer indicating a percentage value.";
   }
 
   typedef percentile {
@@ -672,7 +671,7 @@ module ietf-network-slice-service {
            requested service MTU, the network may discard them
            (or for IPv4, fragment them).
            This service MTU takes precedence over the MTUs of
-           all attachment circuits (ACs). The value needs to be
+           all Attachment Circuits (ACs). The value needs to be
            less than or equal to the minimum MTU value of
            all ACs in the SDPs.";
       }
@@ -691,8 +690,9 @@ module ietf-network-slice-service {
           base service-security-type;
         }
         description
-          "The security functions that the customer requests
-           the operator to apply to traffic between the two SDPs.";
+          "The security functions (e.g., `authentication` and
+           `encryption`) that the customer requests the operator to
+           apply to traffic between the two SDPs.";
       }
       leaf-list isolation {
         type identityref {
@@ -728,7 +728,7 @@ module ietf-network-slice-service {
             type te-types:te-path-disjointness;
             description
               "The type of disjointness on Slice Service, i.e.,
-               across all connectivity constructs.";
+               across all Connectivity Constructs.";
           }
         }
       }
@@ -816,7 +816,7 @@ module ietf-network-slice-service {
         type string;
         description
           "The name of the QoS policy that is applied to the
-           attachment circuit. The name can reference a QoS
+           Attachment Circuit. The name can reference a QoS
            profile that is pre-provisioned on the device.";
       }
       container rate-limits {
@@ -855,7 +855,7 @@ module ietf-network-slice-service {
         type string;
         description
           "The name of the QoS policy that is applied to the
-           attachment circuit. The name can reference a QoS
+           Attachment Circuit. The name can reference a QoS
            profile that is pre-provisioned on the device.";
       }
       container rate-limits {
@@ -901,7 +901,7 @@ module ietf-network-slice-service {
 
   grouping connectivity-construct-monitoring-metrics {
     description
-      "Grouping for connectivity construct monitoring metrics.";
+      "Grouping for Connectivity Construct monitoring metrics.";
     uses
       te-packet-types:one-way-performance-metrics-gauge-packet;
     uses
@@ -1131,7 +1131,7 @@ module ietf-network-slice-service {
                 }
                 mandatory true;
                 description
-                  "Reference to the Slice Service connection group.";
+                  "Reference to the Slice Service Connection Group.";
               }
               leaf connection-group-sdp-role {
                 type identityref {
@@ -1139,11 +1139,11 @@ module ietf-network-slice-service {
                 }
                 default "vpn-common:any-to-any-role";
                 description
-                  "Specifies the role of SDP in the connection group
+                  "Specifies the role of SDP in the Connection Group
                    When the service connection type is MP2MP,
                    such as hub and spoke service connection type.
-                   In addition, this helps to create connectivity
-                   construct automatically, rather than explicitly
+                   In addition, this helps to create Connectivity
+                   Construct automatically, rather than explicitly
                    specifying each one.";
               }
               leaf target-connectivity-construct-id {
@@ -1155,8 +1155,8 @@ module ietf-network-slice-service {
                   + "/ietf-nss:connectivity-construct/ietf-nss:id";
                 }
                 description
-                  "Reference to a Network Slice connection
-                   construct.";
+                  "Reference to a Network Slice Connectivity
+                   Construct.";
               }
             }
           }
@@ -1168,7 +1168,7 @@ module ietf-network-slice-service {
               type string;
               description
                 "Indicates the reference to the remote endpoints of
-                 the attachment circuits. This information can be
+                 the Attachment Circuits. This information can be
                  used for correlation purposes, such as identifying
                  SAPs of provider equipments when requesting
                  a service with CE based SDP attributes.";
@@ -1195,25 +1195,26 @@ module ietf-network-slice-service {
           leaf ce-mode {
             type boolean;
             description
-              "Indicates that SDP is on the CE.";
+              "When set to 'true', this indicates the SDP is located
+               on the CE.";
           }
           container attachment-circuits {
             description
-              "List of attachment circuits.";
+              "List of Attachment Circuits.";
             list attachment-circuit {
               key "id";
               description
-                "The Network Slice Service SDP attachment circuit
+                "The Network Slice Service SDP Attachment Circuit
                  related parameters.";
               leaf id {
                 type string;
                 description
-                  "The identifier of attachment circuit.";
+                  "The identifier of Attachment Circuit.";
               }
               leaf description {
                 type string;
                 description
-                  "The attachment circuit's description.";
+                  "The Attachment Circuit's description.";
               }
               leaf ac-svc-ref {
                 type ac-svc:attachment-circuit-reference;
@@ -1227,14 +1228,14 @@ module ietf-network-slice-service {
               leaf ac-node-id {
                 type string;
                 description
-                  "The attachment circuit node ID in the case of
+                  "The Attachment Circuit node ID in the case of
                    multi-homing.";
               }
               leaf ac-tp-id {
                 type string;
                 description
                   "The termination port ID of the
-                   attachment circuit.";
+                   Attachment Circuit.";
               }
               leaf ac-ipv4-address {
                 type inet:ipv4-address;
@@ -1242,9 +1243,11 @@ module ietf-network-slice-service {
                   "The IPv4 address of the AC.";
               }
               leaf ac-ipv4-prefix-length {
-                type uint8;
+                type uint8 {
+                  range "1..32";
+                }
                 description
-                  "The IPv4 subnet prefix length expressed in bits.";
+                  "The length of the IPv4 subnet prefix.";
               }
               leaf ac-ipv6-address {
                 type inet:ipv6-address;
@@ -1252,9 +1255,11 @@ module ietf-network-slice-service {
                   "The IPv6 address of the AC.";
               }
               leaf ac-ipv6-prefix-length {
-                type uint8;
+                type uint8 {
+                  range "1 .. 128";
+                }
                 description
-                  "The IPv6 subnet prefix length expressed in bits.";
+                  "The length of IPv6 subnet prefix.";
               }
               leaf mtu {
                 type uint32;
@@ -1265,22 +1270,22 @@ module ietf-network-slice-service {
               }
               container ac-tags {
                 description
-                  "Container for the attachment circuit tags.";
+                  "Container for the Attachment Circuit tags.";
                 list ac-tag {
                   key "tag-type";
                   description
-                    "The attachment circuit tag list.";
+                    "The Attachment Circuit tag list.";
                   leaf tag-type {
                     type identityref {
                       base attachment-circuit-tag-type;
                     }
                     description
-                      "The attachment circuit tag type.";
+                      "The Attachment Circuit tag type.";
                   }
                   leaf-list tag-type-value {
                     type string;
                     description
-                      "The attachment circuit tag values.
+                      "The Attachment Circuit tag values.
                        For example, the tag may indicate
                        multiple VLAN identifiers.";
                   }
@@ -1294,9 +1299,9 @@ module ietf-network-slice-service {
                   type string;
                   description
                     "Indicates a reference to the remote endpoints
-                     of an attachment circuit. This information can
+                     of an Attachment Circuit. This information can
                      be used for correlation purposes, such as
-                     identifying a service attachment point (SAP)
+                     identifying a Service Attachment Point (SAP)
                      of a provider equipment when requesting a
                      service with CE based SDP attributes.";
                   reference
@@ -1355,15 +1360,15 @@ module ietf-network-slice-service {
       }
       container connection-groups {
         description
-          "Contains connection groups.";
+          "Contains Connection Groups.";
         list connection-group {
           key "id";
           description
-            "List of connection groups.";
+            "List of Connection Groups.";
           leaf id {
             type string;
             description
-              "The connection group identifier.";
+              "The Connection Group identifier.";
           }
           leaf connectivity-type {
             type identityref {
@@ -1371,29 +1376,29 @@ module ietf-network-slice-service {
             }
             default "vpn-common:any-to-any";
             description
-              "Connection group connectivity type.";
+              "Connection Group connectivity type.";
           }
           uses service-slo-sle-policy;
-          /* Per connection group SLO/SLE policy
+          /* Per Connection Group SLO/SLE policy
            * overrides the per Slice SLO/SLE policy.
            */
           uses service-slo-sle-policy-override;
           list connectivity-construct {
             key "id";
             description
-              "List of connectivity constructs.";
+              "List of Connectivity Constructs.";
             leaf id {
               type string;
               description
-                "The connectivity construct identifier.";
+                "The Connectivity Construct identifier.";
             }
             choice type {
               default "p2p";
               description
-                "Choice for connectivity construct type.";
+                "Choice for Connectivity Construct type.";
               case p2p {
                 description
-                  "P2P connectivity construct.";
+                  "P2P Connectivity Construct.";
                 leaf p2p-sender-sdp {
                   type leafref {
                     path "../../../../sdps/sdp/id";
@@ -1411,7 +1416,7 @@ module ietf-network-slice-service {
               }
               case p2mp {
                 description
-                  "P2MP connectivity construct.";
+                  "P2MP Connectivity Construct.";
                 leaf p2mp-sender-sdp {
                   type leafref {
                     path "../../../../sdps/sdp/id";
@@ -1429,7 +1434,7 @@ module ietf-network-slice-service {
               }
               case a2a {
                 description
-                  "A2A connectivity construct.";
+                  "A2A Connectivity Construct.";
                 list a2a-sdp {
                   key "sdp-id";
                   description
@@ -1446,7 +1451,7 @@ module ietf-network-slice-service {
               }
             }
             uses service-slo-sle-policy;
-            /* Per connectivity construct SLO/SLE policy
+            /* Per Connectivity Construct SLO/SLE policy
              * overrides the per slice SLO/SLE policy.
              */
             uses service-slo-sle-policy-override;
@@ -1454,14 +1459,14 @@ module ietf-network-slice-service {
             container connectivity-construct-monitoring {
               config false;
               description
-                "SLO status per connectivity construct.";
+                "SLO status per Connectivity Construct.";
               uses connectivity-construct-monitoring-metrics;
             }
           }
           container connection-group-monitoring {
             config false;
             description
-              "SLO status per connection group.";
+              "SLO status per Connection Group.";
             uses connectivity-construct-monitoring-metrics;
           }
         }
