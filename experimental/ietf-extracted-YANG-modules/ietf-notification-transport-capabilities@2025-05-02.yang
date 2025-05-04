@@ -21,6 +21,12 @@ module ietf-notification-transport-capabilities {
        Systems and Datastore Update Notifications";
   }
 
+  import ietf-tls-common {
+    prefix tlscmn;
+    reference
+      "RFC 9645: YANG Groupings for TLS Clients and TLS Servers";
+  }
+
   organization "IETF NETCONF (Network Configuration) Working Group";
   contact
     "WG Web:   <https://datatracker.ietf.org/group/netconf/>
@@ -53,7 +59,7 @@ module ietf-notification-transport-capabilities {
      This version of this YANG module is part of RFC XXXX;
      see the RFC itself for full legal notices.";
 
-  revision 2025-01-05 {
+  revision 2025-05-02 {
     description
       "Initial revision.";
     reference
@@ -63,25 +69,6 @@ module ietf-notification-transport-capabilities {
   identity security-protocol {
     description
       "Identity for security protocols.";
-  }
-
-  identity tls12 {
-    base security-protocol;
-    description
-      "Indicates TLS Protocol Version 1.2. TLS 1.2 is obsolete,
-       and thus it is NOT RECOMMENDED to enable this feature.";
-    reference
-      "RFC 5246: The Transport Layer Security (TLS) Protocol
-                 Version 1.2";
-  }
-
-  identity tls13 {
-    base security-protocol;
-    description
-      "Indicates TLS Protocol Version 1.3.";
-    reference
-      "RFC 8446: The Transport Layer Security (TLS)
-                 Protocol Version 1.3";
   }
 
   identity dtls12 {
@@ -103,12 +90,6 @@ module ietf-notification-transport-capabilities {
                  Protocol Version 1.3";
   }
 
-  identity ssh {
-    base security-protocol;
-    description
-      "Indicates SSH.";
-  }
-
   augment "/sysc:system-capabilities/notc:subscription-capabilities" {
     description
       "Adds system level capabilities.";
@@ -127,9 +108,14 @@ module ietf-notification-transport-capabilities {
           description
             "Indicates supported transport protocol for YANG-Push.";
         }
-        leaf security-protocol {
-          type identityref {
-            base security-protocol;
+        leaf-list security-protocol {
+          type union {
+        	  type identityref {
+              base security-protocol;
+        		}
+        	  type identityref {		
+              base tlscmn:tls-version-base;
+        		}
           }
           description
             "Indicates transport security protocol.";
