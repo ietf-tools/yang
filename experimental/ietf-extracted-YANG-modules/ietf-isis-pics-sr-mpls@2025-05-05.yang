@@ -23,6 +23,8 @@ module ietf-isis-pics-sr-mpls {
                <mailto:ginsberg@cisco.com>
      Author:   Tony Przygienda
                <mailto:prz@juniper.net>
+     Author:   Bruno Decraene
+               <mailto:bruno.decraene@orange.com>
      Author:   Yongqing Zhu
                <mailto:zhuyq8@chinatelecom.cn>";
 
@@ -34,7 +36,7 @@ module ietf-isis-pics-sr-mpls {
      This YANG model conforms to the Network Management
      Datastore Architecture (NMDA) as described in RFC 8342.
 
-     Copyright (c) 2024 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -43,7 +45,6 @@ module ietf-isis-pics-sr-mpls {
      forth in Section 4.c of the IETF Trust's Legal Provisions
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
-
      This version of this YANG module is part of RFC XXXX
      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
      for full legal notices.";
@@ -51,7 +52,7 @@ module ietf-isis-pics-sr-mpls {
   reference
     "RFC XXXX: YANG Data Model for IS-IS Segment Routing MPLS PICS";
 
-  revision 2024-07-03 {
+  revision 2025-05-05 {
     description
       "Initial Version";
     reference
@@ -74,7 +75,6 @@ module ietf-isis-pics-sr-mpls {
 
     container sr-capability-sub-tlv-support {
       presence "Support of sr-capability sub-tlv.";
-      //config false;
       description
         "Support of sr-capability sub-tlv (Type 2).";
 
