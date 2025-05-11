@@ -91,7 +91,7 @@ module ietf-ospf-sr-mpls {
   // RFC Ed.: Replace XXXX with actual RFC number and remove
   // this note
 
-  revision 2025-05-05 {
+  revision 2025-05-09 {
     description
       "Initial revision.";
     reference
@@ -773,18 +773,6 @@ module ietf-ospf-sr-mpls {
     reference
       "RFC 9020 - YANG Data Model for Segment Routing";
     uses sr-mpls:igp-interface {
-      augment "segment-routing" {
-        leaf enabled {
-          type boolean;
-          default "true";
-          description
-            "Enable or disable segment-routing over MPLS at the OSPF
-             interface level when segment routing over MPLS is
-             enabled at the area level.";
-        }
-        description
-          "Allow explicit enablement of segment routing";
-      }
       augment "segment-routing/adjacency-sid/adj-sids" {
         when "((../../../ospf:interface-type = 'broadcast') or
               (../../../ospf:interface-type = 'non-broadcast'))" {
@@ -1293,6 +1281,7 @@ module ietf-ospf-sr-mpls {
        (Section 6)";
     uses ospfv3-prefix-sid-sub-tlvs;
   }
+
   augment "/rt:routing/"
         + "rt:control-plane-protocols/rt:control-plane-protocol/"
         + "ospf:ospf/ospf:database/"

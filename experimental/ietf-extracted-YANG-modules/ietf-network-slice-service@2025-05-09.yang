@@ -97,7 +97,7 @@ module ietf-network-slice-service {
      This version of this YANG module is part of RFC AAAA; see the
      RFC itself for full legal notices.";
 
-  revision 2025-04-30 {
+  revision 2025-05-09 {
     description
       "Initial revision.";
     reference
@@ -1244,7 +1244,7 @@ module ietf-network-slice-service {
               }
               leaf ac-ipv4-prefix-length {
                 type uint8 {
-                  range "1..32";
+                  range "0..32";
                 }
                 description
                   "The length of the IPv4 subnet prefix.";
@@ -1256,7 +1256,7 @@ module ietf-network-slice-service {
               }
               leaf ac-ipv6-prefix-length {
                 type uint8 {
-                  range "1 .. 128";
+                  range "0..128";
                 }
                 description
                   "The length of IPv6 subnet prefix.";
