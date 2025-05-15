@@ -34,7 +34,7 @@ module ietf-udp-server {
      This version of this YANG module is part of RFC-to-be; see the RFC
      itself for full legal notices.";
 
-  revision 2025-02-24 {
+  revision 2025-05-14 {
     description
       "Initial revision";
     reference
@@ -76,7 +76,7 @@ module ietf-udp-server {
         type inet:port-number;
         description
           "The local port number to listen on for incoming UDP
-           messages.";
+           datagrams.";
       }
     }
   }
