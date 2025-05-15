@@ -34,7 +34,7 @@ module ietf-udp-client {
     This version of this YANG module is part of RFC-to-be; see the RFC
     itself for full legal notices.";
 
-  revision 2025-02-24 {
+  revision 2025-05-14 {
     description
       "Initial revision";
     reference
@@ -44,8 +44,8 @@ module ietf-udp-client {
   feature local-binding {
     description
       "Indicates that the UDP client supports configuring local
-       bindings (i.e., the local address and local port number) for
-       UDP clients.";
+       bindings (i.e., the local address and local port number)
+       for UDP clients.";
   }
 
   grouping udp-client {
@@ -59,20 +59,19 @@ module ietf-udp-client {
       the 'uses' statement in a container called
       'udp-client-parameters').  This model purposely does
       not do this itself so as to provide maximum flexibility
-      to consuming models. An example is shown in section 5
-      of RFC6724.";
+      to consuming models.";
 
     leaf remote-address {
       type inet:host;
       mandatory true;
       description
         "The IP address or hostname of the remote UDP server.
-        If a domain name is configured, then the name resolution should
-        happen on each connection attempt, unless a previously resolved
-        address is cached and still valid. If the name resolution
-        results in multiple IP addresses, the IP addresses
-        are tried until a connection has been established or
-        until all IP addresses have failed. ";
+        If a domain name is configured, then the name resolution
+        should happen before each datagram is sent, unless a
+        previously resolved address is cached and still valid.
+        If the name resolution results in multiple IP addresses,
+        the IP addresses are tried until a connection has been
+        established or until all IP addresses have failed. ";
     }
 
     leaf remote-port {
@@ -86,9 +85,9 @@ module ietf-udp-client {
       type inet:ip-address;
       description
         "The local IP address to bind to when sending UDP
-        messages to the remote server. INADDR_ANY ('0.0.0.0') or
+        datagrams to the remote server. INADDR_ANY ('0.0.0.0') or
         INADDR6_ANY ('0:0:0:0:0:0:0:0' a.k.a. '::') may be used
-        so that the server can bind to any IPv4 or IPv6 address.";
+        so that the client can bind to any IPv4 or IPv6 address.";
     }
 
     leaf local-port {
