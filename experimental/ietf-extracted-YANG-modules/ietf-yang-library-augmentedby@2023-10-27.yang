@@ -16,11 +16,12 @@ module ietf-yang-library-augmentedby {
      WG List:  <mailto:netconf@ietf.org>
 
      Author:   Zhuoyao Lin
-               <mailto:zhuoyao.lin1@huawei-parteners.com>
+               <mailto:zhuoyao.lin1@huawei-partners.com>
                Benoit Claise
                <mailto:benoit.claise@huawei.com>
                IGNACIO DOMINGUEZ MARTINEZ-CASANUEVA
                <matilto:ignacio.dominguezmartinez@telefonica.com>";
+
   description
     "This module augments the ietf-yang-library defined in
      [RFC8525] to provide not only the deviation list, but also
@@ -57,7 +58,7 @@ module ietf-yang-library-augmentedby {
       "RFC XXXX: Support of augmentedby in ietf-yang-library";
   }
 
-  augment "/yanglib:yang-library/yanglib:module-set/yanglib:module" {
+  grouping augmented-by {
     description
       "Augment the augmented-by list from module info with the
       module-augmented-by grouping" ;
@@ -82,4 +83,20 @@ module ietf-yang-library-augmentedby {
          indirectly) gracefully.";
     }
   }
+
+  augment "/yanglib:yang-library/yanglib:module-set/yanglib:module" {
+    description
+      "Augment the augmented-by list from module info with the
+       augmented-by grouping" ;
+      uses augmented-by;
+  }
+
+  augment "/yanglib:modules-state/yanglib:module" {
+    status deprecated;
+    description
+      "Augment the augmented-by list from module info with the
+      augmented-by grouping" ;
+      uses augmented-by;
+  }
+
 }
