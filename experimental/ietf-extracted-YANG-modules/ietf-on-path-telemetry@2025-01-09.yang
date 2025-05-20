@@ -55,10 +55,11 @@ module ietf-on-path-telemetry {
      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
      for full legal notices.";
 
-  revision 2024-12-20 {
+  revision 2025-01-09 {
     description "First revision.";
     reference "RFC XXXX: A YANG Data Model for On-path Telemetry";
   }
+
  /*
   * FEATURES
   */
@@ -404,7 +405,6 @@ module ietf-on-path-telemetry {
       description
       "It specifies the 20-bit FlowMonID.";
     }
-
     leaf method-type {
       type altmark-method-type;
       description
@@ -455,6 +455,11 @@ module ietf-on-path-telemetry {
         description
           "To specify the timestamp of the delay packet for delay measurements";
       }
+      leaf pkt-seq-num {
+        type yang:counter32;
+        description
+          "To specify the sequence number of the delay packet for delay measurements";
+      }
      }
         }
 
@@ -496,7 +501,6 @@ module ietf-on-path-telemetry {
          "This object indicates the incremental tracing data.";
     }
    }
-
   grouping ioam-preallocated-tracing-data {
     description
       "A grouping for pre-allocated tracing data.";
