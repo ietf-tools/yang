@@ -21,21 +21,21 @@ module ietf-sr-policy-types {
       "WG Web:   <http://tools.ietf.org/wg/spring/>
        WG List:  <mailto:spring@ietf.org>
        Editor:   Kamran Raza
-                 <mailto:skraza@cisco.com>
+       <mailto:skraza@cisco.com>
        Editor:   Tarik Saleh
-                 <mailto:tasaleh@cisco.com>
+       <mailto:tasaleh@cisco.com>
        Editor:   Robert Sawaya
-                 <mailto:rsawaya@cisco.com>
+       <mailto:rsawaya@cisco.com>
        Editor:   Zhuang Shunwan
-                 <mailto:zhuangshunwa@huawei.com>
+       <mailto:zhuangshunwan@huawei.com>
        Editor:   Daniel Voyer
-                 <mailto:daniel.voyer@bell.ca>
+       <mailto:danvoyerwork@gmail.com>
        Editor:   Muhammad Durrani
-                 <mailto:mdurrani@equinix.com>
+       <mailto:Muahmmad.durrani@oracle.com>
        Editor:   Satoru Matsushima
-                 <mailto:satoru.matsushima@g.softbank.co.jp>
+       <mailto:satoru.matsushima@g.softbank.co.jp>
        Editor:   Pavan Vishnu Beeram
-                 <mailto:vbeeram@juniper.net>
+       <mailto:vbeeram@juniper.net>
        ";
 
   description
@@ -57,6 +57,18 @@ module ietf-sr-policy-types {
 
      // RFC Editor: replace XXXX with actual RFC number and remove
      // this note
+
+  revision "2025-05-22" {
+    // RFC Editor: replace the above date 2024-03-04 with the date of
+    // publication and remove this note.
+
+    description
+      "Add a type for MPLS SID value";
+    reference
+      "RFC XXXX: YANG Data Model for Segment-routing Policy Types";
+     // RFC Editor: replace XXXX with actual RFC number and remove
+     // this note
+  }
 
   revision "2024-03-04" {
     // RFC Editor: replace the above date 2024-03-04 with the date of
@@ -287,6 +299,11 @@ module ietf-sr-policy-types {
   }
 
   /* Typdefs */
+  typedef mpls-sid-value-type {
+      type rt-types:mpls-label;
+    description "MPLS SID value type";
+  }
+
   typedef sid-value-type {
     type union {
       type rt-types:mpls-label;
@@ -315,6 +332,7 @@ module ietf-sr-policy-types {
     description
       "Binding SID operational state type";
   }
+
   typedef policy-admin-state {
     type enumeration {
       enum UP {
@@ -385,7 +403,7 @@ module ietf-sr-policy-types {
         description "Dynamically allocated BSID";
       }
     }
-    description "binding SID allocation mode";
+    description "Binding SID allocation mode";
   }
 
   typedef explicit-binding-sid-rule-type {

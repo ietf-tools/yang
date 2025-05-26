@@ -39,30 +39,23 @@ module ietf-sr-policy {
   organization "IETF SPRING Working Group";
   contact
     "WG Web:   <http://tools.ietf.org/wg/spring/>
-    WG List:  <mailto:spring@ietf.org>
-
-    Editor:   Kamran Raza
-    <mailto:skraza@cisco.com>
-    Editor:   Tarik Saleh
-    <mailto:tasaleh@cisco.com>
-
-    Editor:   Robert Sawaya
-    <mailto:rsawaya@cisco.com>
-
-    Editor:   Zhuang Shunwan
-    <mailto:zhuangshunwa@huawei.com>
-
-    Editor:   Daniel Voyer
-    <mailto:daniel.voyer@bell.ca>
-
-    Editor:   Muhammad Durrani
-    <mailto:mdurrani@equinix.com>
-
-    Editor:   Satoru Matsushima
-    <mailto:satoru.matsushima@g.softbank.co.jp>
-
-    Editor:   Pavan Vishnu Beeram
-    <mailto:vbeeram@juniper.net>
+     WG List:  <mailto:spring@ietf.org>
+     Editor:   Kamran Raza
+     <mailto:skraza@cisco.com>
+     Editor:   Tarik Saleh
+     <mailto:tasaleh@cisco.com>
+     Editor:   Robert Sawaya
+     <mailto:rsawaya@cisco.com>
+     Editor:   Zhuang Shunwan
+     <mailto:zhuangshunwan@huawei.com>
+     Editor:   Daniel Voyer
+     <mailto:danvoyerwork@gmail.com>
+     Editor:   Muhammad Durrani
+     <mailto:Muahmmad.durrani@oracle.com>
+     Editor:   Satoru Matsushima
+     <mailto:satoru.matsushima@g.softbank.co.jp>
+     Editor:   Pavan Vishnu Beeram
+     <mailto:vbeeram@juniper.net>
     ";
 
   description
@@ -71,7 +64,6 @@ module ietf-sr-policy {
 
      Copyright (c) 2024 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
-
      Redistribution and use in source and binary forms, with or
      without modification, is permitted pursuant to, and subject to
      the license terms contained in, the Revised BSD License set
@@ -90,6 +82,18 @@ module ietf-sr-policy {
 
     // RFC Editor: replace XXXX with actual RFC number and remove
     // this note
+  revision "2025-05-22" {
+    // RFC Editor: replace the above date 2024-11-22 with the date of
+    // publication and remove this note.
+
+    description
+      "Update the SR policy YANG model with more alignment with SR
+       policy architecture";
+    reference
+      "RFC XXXX: YANG Data Model for Segment-routing Policy";
+     // RFC Editor: replace XXXX with actual RFC number and remove
+     // this note
+  }
 
   revision "2024-11-22" {
     // RFC Editor: replace the above date 2024-11-22 with the date of
@@ -141,6 +145,28 @@ module ietf-sr-policy {
       "Initial version";
     reference
       "draft-raza-spring-sr-policy-yang";
+  }
+
+  //TBD: To be moved to srv6-base model when the model is ready
+  grouping srv6-sid-info {
+    description "Define an SRv6 SID";
+
+    leaf value {
+      type srv6-types:srv6-sid;
+      description "SRv6 SID value";
+    }
+
+    leaf sid-behavior {
+      type identityref {
+        base srv6-types:srv6-endpoint-type;
+      }
+      description "SRv6 BSID behavior";
+    }
+
+    container sid-structure {
+      description "SRv6 BSID structure";
+      uses srv6-types:srv6-sid-structure;
+    }
   }
 
   grouping srv6-bsid-type-b-config {
@@ -357,6 +383,135 @@ module ietf-sr-policy {
     uses segment_config;
   }
 
+  grouping optimization-template-constraints {
+    description "Constraints of optimization template";
+
+      container srlg { // the rule applies per link
+        description "SRLG constraints on the computed dynamic path";
+
+        leaf-list exclude-any {
+          type string;
+          description
+            "The link is excluded if it has any of these SRLG.";
+        }
+      }
+
+      container affinity {  // the rule applies per link
+        description
+          "Affinity constraints on the computed dynamic path";
+
+        leaf-list exclude-any {
+          type string;
+          description
+            "The link is excluded if it has any of these affinities."
+            ;
+        }
+
+        leaf-list include-any {
+          type string;
+          description
+            "The link is accepted if it has any of these affinities";
+        }
+        leaf-list include-all {
+          type string;
+          description
+            "The link is accepted if it has all these affinities";
+        }
+      }
+
+      container ip-address {
+        // the rule applies to e2e path and not per link
+        description
+          "IP address constraints on the computed dynamic path";
+
+        leaf-list exclude {
+          type inet:ip-address;
+          description
+            "Must exclude the links that has any of these IP
+            addresses.";
+        }
+      }
+
+      container upper-bounds {
+        description
+          "Upper-bound constraints on the computed dynamic path";
+
+        container cumulative-metric {
+          description
+            "Path is invalid if its metric exceeds this value";
+
+          leaf metric-type {
+            type sr-policy-types:metric-type;
+            description "Metric type";
+          }
+
+          leaf value { type uint32; description "Cumulative value"; }
+        }
+
+        leaf max-sids {
+          type uint32;
+          description
+            "Path is invalid if it has more SIDs than this value";
+        }
+      }
+
+      container segment-rules {
+        description
+          "Constraints on the segments to be used in the path";
+
+        leaf sid-protection-eligibility {
+          // currently applies to adj-sid segments only
+          type sr-policy-types:sid-protection-eligibility-type;
+          description "SID protection eligibility";
+        }
+      }
+
+      leaf max-sids {
+        type uint32;
+        description "Maximum number of SIDs in a segment-list";
+      }
+  }
+
+  grouping optimization-templates {
+    description
+      "Path optimization templates properties";
+
+    container optimization-templates {
+      description "Path optimization templates";
+
+      list optimization-template {
+        key "color";
+        description "Path optimization template";
+
+        leaf color {
+          type uint32;
+          description "Template identifier as a policy color";
+        }
+
+        container candidate-paths {
+          description "A list of candidate paths representing the
+                       optimization objectives and constraints";
+
+          list candidate-path {
+            key "discriminator";
+            description "Candidate paths representing the
+                         optimization objectives and constraints";
+            leaf discriminator {
+              type uint32;
+              description "Candidate path distinguisher";
+            }
+            uses cpath-optimization-objs;
+            container constraints {
+              description "Constraints of a path optimization template";
+
+              uses optimization-template-constraints;
+            }
+          }
+        }
+      }
+    }
+  }
+
   grouping attributes {
     description
       "Grouping containing attributes applicable to all SR policies";
@@ -370,6 +525,26 @@ module ietf-sr-policy {
        */ // TODO: Beyond the scope of this model
       uses segment-lists;
       uses explicit-binding-sid-rules;
+    }
+  }
+
+  grouping forwarding-counters {
+    description
+      "Grouping for counters";
+    container counters {
+      config false;
+      description
+        "Counters containing stats related to forwarding";
+
+      leaf pkts {
+        type yang:counter64;
+        description "Number of packets forwarded";
+      }
+      leaf octets {
+        type yang:counter64;
+        units "byte";
+        description "Number of bytes forwarded";
+      }
     }
   }
 
@@ -403,42 +578,30 @@ module ietf-sr-policy {
   grouping binding-sid_config {
     description
       "Binding SID configuration properties grouping";
-    leaf dataplane {
-      type sr-policy-types:dataplane-type;
-      description "Binding SID dataplane type";
-    }
-    leaf value {
-      type sr-policy-types:sid-value-type;
-      description "Binding SID value";
-    }
-
-    container srv6 {
-      description
-        "SRv6 configuration";
-      leaf locator-name {
-        type srv6-types:srv6-locator-name-type;
-        description "Locator name used to allocate SRv6 binding SID";
+    container mpls-sid {
+      description "MPLS binding SIDs";
+      leaf value {
+        type sr-policy-types:mpls-sid-value-type;
+        description "MPLS binding SID value";
       }
-      uses srv6-bsid-type-b-config;
     }
-  }
 
-  grouping forwarding-counters {
-    description
-      "Grouping for counters";
-    container counters {
-      config false;
-      description
-        "Counters containing stats related to forwarding";
+    container srv6-sids {
+      description "SRv6 binding SIDs";
 
-      leaf pkts {
-        type yang:counter64;
-        description "Number of packets forwarded";
-      }
-      leaf octets {
-        type yang:counter64;
-        units "byte";
-        description "Number of bytes forwarded";
+      list srv6-sid {
+        key "index";
+        description "Configure an SRv6 binding-sid";
+        leaf index {
+          type uint32;
+          description "Binding SID index";
+        }
+
+        leaf locator-name {
+          type srv6-types:srv6-locator-name-type;
+          description "Locator name used to allocate SRv6 binding SID";
+        }
+        uses srv6-sid-info;
       }
     }
   }
@@ -449,7 +612,7 @@ module ietf-sr-policy {
     leaf alloc-mode {
       type sr-policy-types:binding-sid-alloc-mode;
       config false;
-      description "Binding SID type";
+      description "Binding SID allocation mode";
     }
     leaf allocated-sid {
       type sr-policy-types:sid-value-type;
@@ -470,49 +633,6 @@ module ietf-sr-policy {
     container binding-sid {
       description "Binding Segment ID";
       uses binding-sid_config;
-      uses binding-sid_state;
-    }
-  }
-
-  grouping mpls-label-stack {
-    description
-      "Grouping for MPLS label stack";
-
-    list labels {
-      key "index";
-      description
-        "Stack containing MPLS labels";
-
-      leaf index {
-        type uint32;
-        description "A unique ID of an MPLS label in labels list";
-      }
-      leaf label {
-        type rt-types:mpls-label;
-        description
-          "MPLS label value";
-      }
-    }
-  }
-
-  grouping srv6-sid-stack {
-    description
-      "Grouping for SRv6 label stack";
-
-    list sids {
-      key "index";
-      description
-        "Stack containing SRv6 SIDs";
-
-      leaf index {
-        type uint32;
-        description "A unique ID of an SRv6 sid in sid list";
-      }
-      leaf sid {
-        type srv6-types:srv6-sid;
-        description
-          "SRv6 sid value";
-      }
     }
   }
 
@@ -534,35 +654,26 @@ module ietf-sr-policy {
       type if:interface-ref;
       description "Outgoing interface handle";
     }
-    container sid-list {
-      description
-        "Outgoing sid stack";
-      choice dataplanetype {
-        description
-          "Outgoing sids dataplane choice";
-        case mpls {
-          uses mpls-label-stack;
-        }
-        case srv6 {
-          uses srv6-sid-stack;
-        }
-      }
-    }
     leaf is-protected {
       type boolean;
       description "Is this path protected ?";
-    }
-    leaf is-pure-backup {
-      type boolean;
-      description "Is this path a pure backup ?";
     }
     leaf backup-path-id {
       type uint8;
       description "Backup path id";
     }
+    leaf is-pure-backup {
+      type boolean;
+      description "Is this path a pure backup ?";
+    }
     leaf weight {
       type uint32;
       description "Path's weight for W-ECMP balancing";
+    }
+    container sid-list {
+      description "Outgoing sid stack";
+
+      uses sid-list-grouping;
     }
   }
 
@@ -577,13 +688,20 @@ module ietf-sr-policy {
         "True if the candidate path is valid and used to forward
         traffic, False otherwise";
     }
-
     leaf is-valid {
       type boolean;
       config false;
       description
         "True if at least one segment-list is valid,
         False otherwise";
+    }
+
+    container computed-sid-list {
+      config false;
+      description "Computed SID list which could be different from
+                   outgoing SID list";
+
+      uses sid-list-grouping;
     }
 
     container forwarding-paths {
@@ -594,6 +712,7 @@ module ietf-sr-policy {
         key "path-id";
         description "Forwarding path";
         uses path-forwarding_state;
+        uses forwarding-counters;
       }
     }
   }
@@ -631,6 +750,7 @@ module ietf-sr-policy {
           description
             "True if the segment-list is valid, False otherwise";
         }
+        uses forwarding-counters;
       }
     }
   }
@@ -873,22 +993,6 @@ module ietf-sr-policy {
         }
       }
 
-      container bandwidth {
-        description "Bandwidth constraints";
-
-        leaf requested {
-          type uint32;
-          description
-            "Requested bandwidth expressed in bytes per second";
-        }
-        leaf reserved {
-          type uint32;
-          config false;
-          description
-            "Reserved bandwidth expressed in bytes per second";
-        }
-      }
-
       leaf max-sids {
         type uint32;
         description "Maximum number of SIDs in a segment-list";
@@ -914,12 +1018,12 @@ module ietf-sr-policy {
         description
           "True if the segment-list is valid, False otherwise";
       }
+      uses forwarding-counters;
     }
 
     uses cpath-optimization-objs;
     uses cpath-constraints;
   }
-
   grouping composite-path-properties {
     description
       "Composite path properties of the candidate path";
@@ -942,6 +1046,63 @@ module ietf-sr-policy {
           default 1;
           description "Constituent policy weighted loadshare";
         }
+      }
+    }
+  }
+
+  grouping mpls-label-stack {
+    description
+      "Grouping for MPLS label stack";
+
+    list labels {
+      key "index";
+      description
+        "Stack containing MPLS labels";
+
+      leaf index {
+        type uint32;
+        description "A unique ID of an MPLS label in labels list";
+      }
+      leaf label {
+        type rt-types:mpls-label;
+        description
+          "MPLS label value";
+      }
+    }
+  }
+
+  grouping srv6-sid-stack {
+    description
+      "Grouping for SRv6 label stack";
+
+    list sids {
+      key "index";
+      description
+        "Stack containing SRv6 SIDs";
+
+      leaf index {
+        type uint32;
+        description "A unique ID of an SRv6 sid in sid list";
+      }
+      leaf sid {
+        type srv6-types:srv6-sid;
+        description
+          "SRv6 sid value";
+      }
+    }
+  }
+
+  grouping sid-list-grouping {
+    description "Grouping for SID list";
+
+    choice dataplane-type {
+      description
+        "Outgoing sids dataplane choice";
+      case mpls {
+        uses mpls-label-stack;
+      }
+      case srv6 {
+        uses srv6-sid-stack;
       }
     }
   }
@@ -999,6 +1160,30 @@ module ietf-sr-policy {
       description
         "Priority considered when policy is recomputed due to
         topology changes";
+    }
+    leaf profile-id {
+      type uint32;
+      description "A profile represents a set of configuration knobs
+                   specifying a policy or candidate-path attributes.
+                   The profile-ID feature allows usage of
+                   vendor/implementation specific functionality per
+                   policy without requiring  explicit support by
+                   controller.";
+    }
+    container bandwidth {
+      description "Bandwidth constraints";
+
+      leaf requested {
+        type uint64;
+        description
+          "Requested bandwidth expressed in bytes per second";
+      }
+      leaf reserved {
+        type uint64;
+        config false;
+        description
+          "Reserved bandwidth expressed in bytes per second";
+      }
     }
   }
 
@@ -1184,11 +1369,36 @@ module ietf-sr-policy {
       container traffic-engineering {
         description "Traffic-engineering container";
 
+        uses optimization-templates;
         uses attributes;
-
         uses policies;
       }
     }
+  }
+
+  augment "/rt:routing/"
+    + "sr-policy:segment-routing/"
+    + "sr-policy:traffic-engineering/"
+    + "sr-policy:policies/"
+    + "sr-policy:policy/"
+    + "sr-policy:binding-sid/"
+    + "sr-policy:mpls-sid" {
+    description
+      "Augments binding-sid state with MPLS binding-sid";
+    uses binding-sid_state;
+  }
+
+  augment "/rt:routing/"
+    + "sr-policy:segment-routing/"
+    + "sr-policy:traffic-engineering/"
+    + "sr-policy:policies/"
+    + "sr-policy:policy/"
+    + "sr-policy:binding-sid/"
+    + "sr-policy:srv6-sids/"
+    + "sr-policy:srv6-sid" {
+    description
+      "Augments binding-sid state with SRv6 binding-sid";
+    uses binding-sid_state;
   }
 
   /* Notifications */
@@ -1341,18 +1551,42 @@ module ietf-sr-policy {
       description "Reference to sr-policy endpoint";
     }
 
-    leaf policy-binding-sid-value-ref {
-      if-feature capability-candidate-path-binding-sid;
-      type leafref {
-        path "/rt:routing/"
-          + "sr-policy:segment-routing/"
-          + "sr-policy:traffic-engineering/"
-          + "sr-policy:policies/"
-          + "sr-policy:policy/"
-          + "sr-policy:binding-sid/"
-          + "sr-policy:value";
+    choice dataplane-type {
+      description
+        "Binding SID dataplane choice";
+      case mpls {
+        leaf policy-mpls-binding-sid-value-ref {
+          if-feature capability-candidate-path-binding-sid;
+          type leafref {
+            path "/rt:routing/"
+              + "sr-policy:segment-routing/"
+              + "sr-policy:traffic-engineering/"
+              + "sr-policy:policies/"
+              + "sr-policy:policy/"
+              + "sr-policy:binding-sid/"
+              + "sr-policy:mpls-sid/"
+              + "sr-policy:value";
+          }
+          description "Reference to sr-policy MPLS binding SID value";
+        }
       }
-      description "Reference to sr-policy binding-sid value";
+      case srv6 {
+        leaf policy-srv6-binding-sid-value-ref {
+          if-feature capability-candidate-path-binding-sid;
+          type leafref {
+            path "/rt:routing/"
+              + "sr-policy:segment-routing/"
+              + "sr-policy:traffic-engineering/"
+              + "sr-policy:policies/"
+              + "sr-policy:policy/"
+              + "sr-policy:binding-sid/"
+              + "sr-policy:srv6-sids/"
+              + "sr-policy:srv6-sid/"
+              + "sr-policy:value";
+          }
+          description "Reference to sr-policy SRv6 binding SID value";
+        }
+      }
     }
 
     leaf reason {
@@ -1423,39 +1657,48 @@ module ietf-sr-policy {
       description "Reference to existing candidate path preference";
     }
 
-    leaf existing-candidate-path-binding-sid-dataplane-ref {
-      if-feature capability-candidate-path-binding-sid;
-      type leafref {
-        path "/rt:routing/"
-          + "sr-policy:segment-routing/"
-          + "sr-policy:traffic-engineering/"
-          + "sr-policy:policies/"
-          + "sr-policy:policy/"
-          + "sr-policy:candidate-paths/"
-          + "sr-policy:candidate-path/"
-          + "sr-policy:binding-sid/"
-          + "sr-policy:dataplane";
-      }
+    choice dataplane-type {
       description
-        "Reference to existing candidate path binding sid dataplane
-        type";
-    }
-
-    leaf existing-candidate-path-binding-sid-value-ref {
-      if-feature capability-candidate-path-binding-sid;
-      type leafref {
-        path "/rt:routing/"
-          + "sr-policy:segment-routing/"
-          + "sr-policy:traffic-engineering/"
-          + "sr-policy:policies/"
-          + "sr-policy:policy/"
-          + "sr-policy:candidate-paths/"
-          + "sr-policy:candidate-path/"
-          + "sr-policy:binding-sid/"
-          + "sr-policy:value";
+        "Binding SID dataplane choice";
+      case mpls {
+        leaf existing-candidate-path-mpls-binding-sid-value-ref {
+          if-feature capability-candidate-path-binding-sid;
+          type leafref {
+            path "/rt:routing/"
+              + "sr-policy:segment-routing/"
+              + "sr-policy:traffic-engineering/"
+              + "sr-policy:policies/"
+              + "sr-policy:policy/"
+              + "sr-policy:candidate-paths/"
+              + "sr-policy:candidate-path/"
+              + "sr-policy:binding-sid/"
+              + "sr-policy:mpls-sid/"
+              + "sr-policy:value";
+          }
+          description
+            "Reference to existing candidate path MPLS binding SID value";
+        }
       }
-      description
-        "Reference to existing candidate path binding sid value";
+      case srv6 {
+        leaf existing-candidate-path-srv6-binding-sid-value-ref {
+          if-feature capability-candidate-path-binding-sid;
+          type leafref {
+            path "/rt:routing/"
+              + "sr-policy:segment-routing/"
+              + "sr-policy:traffic-engineering/"
+              + "sr-policy:policies/"
+              + "sr-policy:policy/"
+              + "sr-policy:candidate-paths/"
+              + "sr-policy:candidate-path/"
+              + "sr-policy:binding-sid/"
+              + "sr-policy:srv6-sids/"
+              + "sr-policy:srv6-sid/"
+              + "sr-policy:value";
+          }
+          description
+            "Reference to existing candidate path SRv6 binding SID value";
+        }
+      }
     }
 
     leaf conflicting-candidate-path-protocol-origin {
