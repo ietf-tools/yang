@@ -42,6 +42,12 @@ module iana-dns-class-rr-type {
     "IANA 'Domain Name System (DNS) Parameters' registry
      https://www.iana.org/assignments/dns-parameters";
 
+   revision 2025-05-20 {
+     description "Registered RR Types HHIT 67 and BRID 68.";
+     reference
+       "draft-ietf-drip-registries-28";
+  }
+
    revision 2024-12-10 {
      description "Registered RR Type DSYNC 66. Added version numbers 
        to draft strings, references to revision statements.";
