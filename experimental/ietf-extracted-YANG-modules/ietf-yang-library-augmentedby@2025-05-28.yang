@@ -49,11 +49,9 @@ module ietf-yang-library-augmentedby {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.  ";
 
-  revision 2023-10-27 {
+  revision 2025-05-28 {
     description
-      "Added list augmented-by in yang-library/module-set/module to
-      make the module store the entire reverse dependency information
-      (augmented-by and deviation).";
+      "Initial revision.";
     reference
       "RFC XXXX: Support of augmentedby in ietf-yang-library";
   }
