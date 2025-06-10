@@ -220,6 +220,7 @@ module ietf-vrrp {
       "Indicates that there are no virtual IP addresses on the
        virtual router.";
   }
+
   identity vrrp-event-virtual-ip-addresses {
     base vrrp-event-type;
     description
