@@ -53,7 +53,7 @@ module ietf-yang-library-augmentedby {
     description
       "Initial revision.";
     reference
-      "RFC XXXX: Support of augmentedby in ietf-yang-library";
+      "RFC XXXX: Augmented-by Addition to the YANG Library";
   }
 
   grouping augmented-by {
@@ -81,6 +81,7 @@ module ietf-yang-library-augmentedby {
          indirectly) gracefully.";
     }
   }
+
   augment "/yanglib:yang-library/yanglib:module-set/yanglib:module" {
     description
       "Augments the augmented-by leaf-list from module info with the
@@ -101,7 +102,6 @@ module ietf-yang-library-augmentedby {
        " ;
       uses augmented-by;
   }
-
   augment "/yanglib:modules-state/yanglib:module" {
     status deprecated;
     description
