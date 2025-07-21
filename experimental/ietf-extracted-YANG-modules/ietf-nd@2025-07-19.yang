@@ -1,8 +1,12 @@
 module ietf-nd {
   yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-nd";
-  prefix v6nd;
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-nd";
+  prefix nd;
 
+  import ietf-inet-types {
+    prefix inet;
+  }
   import ietf-yang-types {
     prefix yang;
     reference
@@ -33,19 +37,18 @@ module ietf-nd {
               <lana.wubo@huawei.com>
      Author:  Jiayuan Hu
               <hujy5@chinatelecom.cn>";
-
   description
-    "This YANG module defines a YANG data model to configure and
-     manage IPv6 address resolution based on IPv6 Neighbor
-     Discovery (ND) protocol and other related functions, including
-     proxy Neighbor Advertisement, Neighbor Unreachability
-     Detection (NUD), and Duplicate Address Detection (DAD).
+    "This YANG module defines a YANG data model to configure and manage
+     IPv6 Neighbor Discovery (ND) and related functions, including
+     IPv6 address resolution, redirect function, proxy Neighbor
+     Advertisement, Neighbor Unreachability Detection (NUD), Duplicate
+     Address Detection (DAD), and SEcure Neighbor Discovery (SEND).
 
      The model is based on YANG 1.1 as defined in RFC 7950 and
      conforms to Network Management Datastore Architecture (NMDA)
      as defined in RFC 8342.
 
-     Copyright (c) 2024 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -68,7 +71,7 @@ module ietf-nd {
     "RFC4861: Neighbor Discovery for IP version 6 (IPv6)
      RFC4862: IPv6 Stateless Address Autoconfiguration";
 
-  revision 2024-06-27 {
+  revision 2025-07-19 {
     description
       "Init revision";
     reference
@@ -76,10 +79,11 @@ module ietf-nd {
   }
 
   /* Data nodes */
+
   container nd {
     description
       "Global parameters for IPv6 address resolution based on IPv6
-       ND";
+       ND.";
     leaf stale-timeout {
       type uint32;
       units "second";
@@ -89,6 +93,168 @@ module ietf-nd {
       reference
         "RFC4861: Neighbor Discovery for IP version 6 (IPv6)
                   Section 5.3";
+    }
+    container secure-nd {
+      description
+        "Global parameters for SEcure Neighbor Discovery (SEND).";
+      leaf cga-flag {
+        type boolean;
+        description
+          "Flag to indicate whether the node is using CGA.";
+      }
+      leaf minbits {
+        type uint32;
+        default "1024";
+        description
+          "The minimum acceptable key length for public keys used
+           in the generation of CGAs.";
+      }
+      leaf keypair {
+        type string;
+        description
+          "The public-private key pair used for RSA signatures.";
+      }
+      container RSA-signature-option-reception {
+        description
+          "Parameter for the node that support the reception of the RSA Signature options.";
+        leaf ns-authorization-method {
+          type enumeration {
+            enum trust-anchor {
+              description
+                "The sender's authority is verified via trust anchor.";
+            }
+            enum cga {
+              description
+                "The sender's authority is verified via CGA.";
+            }
+            enum trust-anchor-and-cga {
+              description
+                "Both trust anchor and CGA verification are required.";
+            }
+            enum trust-anchor-or-cga {
+              description
+                "Either trust anchor or CGA verification is required.";
+            }
+          }
+          description
+            "The method to verify the authority of the sender of NS messages.";
+        }
+        leaf na-authorization-method {
+          type enumeration {
+            enum trust-anchor {
+              description
+                "The sender's authority is verified via trust anchor.";
+            }
+            enum cga {
+              description
+                "The sender's authority is verified via CGA.";
+            }
+            enum trust-anchor-and-cga {
+              description
+                "Both trust anchor and CGA verification are required.";
+            }
+            enum trust-anchor-or-cga {
+              description
+                "Either trust anchor or CGA verification is required.";
+            }
+          }
+          description
+            "The method to verify the authority of the sender of NA messages.";
+        }
+        leaf rs-authorization-method {
+          type enumeration {
+            enum trust-anchor {
+              description
+                "The sender's authority is verified via trust anchor.";
+            }
+            enum cga {
+              description
+                "The sender's authority is verified via CGA.";
+            }
+            enum trust-anchor-and-cga {
+              description
+                "Both trust anchor and CGA verification are required.";
+            }
+            enum trust-anchor-or-cga {
+              description
+                "Either trust anchor or CGA verification is required.";
+            }
+          }
+          description
+            "The method to verify the authority of the sender of RS messages.";
+        }
+        leaf ra-authorization-method {
+          type enumeration {
+            enum trust-anchor {
+              description
+                "The sender's authority is verified via trust anchor.";
+            }
+            enum cga {
+              description
+                "The sender's authority is verified via CGA.";
+            }
+            enum trust-anchor-and-cga {
+              description
+                "Both trust anchor and CGA verification are required.";
+            }
+            enum trust-anchor-or-cga {
+              description
+                "Either trust anchor or CGA verification is required.";
+            }
+          }
+          description
+            "The method to verify the authority of the sender of RA messages.";
+        }
+        leaf redirect-authorization-method {
+          type enumeration {
+            enum trust-anchor {
+              description
+                "The sender's authority is verified via trust anchor.";
+            }
+            enum cga {
+              description
+                "The sender's authority is verified via CGA.";
+            }
+            enum trust-anchor-and-cga {
+              description
+                "Both trust anchor and CGA verification are required.";
+            }
+            enum trust-anchor-or-cga {
+              description
+                "Either trust anchor or CGA verification is required.";
+            }
+          }
+          description
+            "The method to verify the authority of the sender of Redirect messages.";
+        }
+      }
+      container timestamp {
+        description
+          "Parameters of Timestamp option.";
+        leaf timestamp-delta {
+          type uint32;
+          units "second";
+          default "300";
+          description
+            "The allowed timestamp Delta value.";
+        }
+        leaf timestamp-fuzz {
+          type uint32;
+          units "second";
+          default "1";
+          description
+            "The 'fuzz factor' for comparisons.";
+        }
+        leaf timestamp-drift {
+          type uint8;
+          units "percent";
+          default "1";
+          description
+            "The allowed clock drift parameter.";
+        }
+      }
+      reference
+        "RFC3971: SEcure Neighbor Discovery (SEND)";
     }
   }
 
@@ -156,7 +322,18 @@ module ietf-nd {
           "RFC4861: Neighbor Discovery for IP version 6 (IPv6)
                     Section 5.3";
       }
-
+      leaf redirect {
+        type boolean;
+        default "false";
+        description
+          "Controls whether sending of ICMP Redirect messages
+           on the interface is enabled or disabled.
+            true -  Sending of ICMP Redirect messages is enabled,
+            false - Sending of ICMP Redirect messages is disabled.";
+        reference
+          "RFC4861: Neighbor Discovery for IP version 6 (IPv6)
+                    Section 8";
+      }
       container proxy-na {
         description
           "Parameters of proxy Neighbor Advertisements.";
@@ -179,13 +356,35 @@ module ietf-nd {
           "RFC4861: Neighbor Discovery for IP version 6 (IPv6)
                     Section 7.2.8";
       }
-
+      container secure-nd {
+        description
+          "Parameters of SEcure Neighbor Discovery (SEND).";
+        leaf cga-flag {
+          type boolean;
+          description
+            "Flag to indicate whether the interface is using CGA.";
+        }
+        leaf modifier {
+          type inet:ipv6-address;
+          description
+            "Modifier for CGA.";
+        }
+        reference
+          "RFC3971: SEcure Neighbor Discovery (SEND)";
+      }
+      leaf secure-proxy-nd {
+        type boolean;
+        default "false";
+        description
+          "Controls whether Secure ND Proxy is enabled or disabled.";
+        reference
+          "RFC6496: Secure Proxy ND Support for SEcure Neighbor Discovery (SEND)";
+      }
       container statistics {
         config false;
         description
           "A collection of interface-related statistics about IPv6
            ND messages.";
-
         leaf in-ns-pkts {
           type yang:counter32;
           description
@@ -206,6 +405,11 @@ module ietf-nd {
           description
             "The number of received Router Advertisement packets.";
         }
+        leaf in-redirect-pkts {
+          type yang:counter32;
+          description
+            "The number of received Redirect packets.";
+        }
         leaf out-ns-pkts {
           type yang:counter32;
           description
@@ -225,6 +429,11 @@ module ietf-nd {
           type yang:counter32;
           description
             "The number of sent Router Advertisement packets.";
+        }
+        leaf out-redirect-pkts {
+          type yang:counter32;
+          description
+            "The number of sent Redirect packets.";
         }
       }
     }
