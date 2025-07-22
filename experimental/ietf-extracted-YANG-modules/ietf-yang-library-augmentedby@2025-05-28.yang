@@ -1,6 +1,7 @@
 module ietf-yang-library-augmentedby {
   yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-yang-library-augmentedby";
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-yang-library-augmentedby";
   prefix yanglib-aug;
 
   import ietf-yang-library {
@@ -15,13 +16,12 @@ module ietf-yang-library-augmentedby {
     "WG Web:   <https://datatracker.ietf.org/wg/netconf/>
      WG List:  <mailto:netconf@ietf.org>
 
-     Author:   Zhuoyao Lin
+     Authors:   Zhuoyao Lin
                <mailto:zhuoyao.lin1@huawei-partners.com>
                Benoit Claise
                <mailto:benoit.claise@huawei.com>
                Ignacio Dominguez Martinez-Casanueva
                <matilto:ignacio.dominguezmartinez@telefonica.com>";
-
   description
     "This module augments the ietf-yang-library defined in
      [RFC8525] to provide not only the deviation list, but also
@@ -59,13 +59,11 @@ module ietf-yang-library-augmentedby {
   grouping augmented-by {
     description
       "Augment the augmented-by leaf-list from module info with the
-      module-augmented-by grouping" ;
-
+       module-augmented-by grouping";
     leaf-list augmented-by {
       type leafref {
         path "../../yanglib:module/yanglib:name";
       }
-
       description
         "Leaf-list of the augmentation used by this server to
          modify the conformance of the module associated with
@@ -99,9 +97,10 @@ module ietf-yang-library-augmentedby {
        modules defined in the schema tree are only indirect
        dependencies but not augmented modules. (Refer to
        'Target node' definition in Section 7.17 of RFC7950)
-       " ;
-      uses augmented-by;
+      ";
+    uses augmented-by;
   }
+
   augment "/yanglib:modules-state/yanglib:module" {
     status deprecated;
     description
@@ -120,8 +119,7 @@ module ietf-yang-library-augmentedby {
        modules defined in the schema tree are only indirect
        dependencies but not augmented modules. (Refer to
        'Target node' definition in Section 7.17 of RFC7950)
-       " ;
-      uses augmented-by;
+      ";
+    uses augmented-by;
   }
-
 }
