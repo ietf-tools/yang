@@ -31,7 +31,7 @@ module ietf-netconf-txid {
      WG List:  <netconf@ietf.org>
 
      Author:   Jan Lindblad
-               <mailto:jlindbla@cisco.com>";
+               <mailto:jan.lindblad+ietf@for.eco>";
   description
     "NETCONF Transaction ID aware operations for NMDA.
 
@@ -56,7 +56,7 @@ module ietf-netconf-txid {
      they appear in all capitals, as shown here.
     ";
 
-  revision 2023-03-01 {
+  revision 2025-08-01 {
     description
       "Initial revision";
     reference

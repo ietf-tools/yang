@@ -1,18 +1,14 @@
-module ietf-netconf-txid-yang-push {
+module ietf-netconf-txid-nmda-compare {
   yang-version 1.1;
   namespace
-    "urn:ietf:params:xml:ns:yang:ietf-netconf-txid-yang-push";
-  prefix ietf-netconf-txid-yp;
+    "urn:ietf:params:xml:ns:yang:ietf-netconf-txid-nmda-compare";
+  prefix ietf-netconf-txid-nmda-compare;
 
-  import ietf-subscribed-notifications {
-    prefix sn;
+  import ietf-nmda-compare {
+    prefix cmp;
     reference
-      "RFC 8639: Subscription to YANG Notifications";
-  }
-  import ietf-yang-push {
-    prefix yp;
-    reference
-      "RFC 8641: Subscriptions to YANG Datastores";
+      "RFC 9144: Comparison of Network Management Datastore
+       Architecture (NMDA) Datastores";
   }
   import ietf-netconf-txid {
     prefix ietf-netconf-txid;
@@ -27,11 +23,11 @@ module ietf-netconf-txid-yang-push {
      WG List:  <netconf@ietf.org>
 
      Author:   Jan Lindblad
-               <mailto:jlindbla@cisco.com>";
+               <mailto:jan.lindblad+ietf@for.eco>";
   description
-    "NETCONF Transaction ID aware operations for YANG Push.
+    "NETCONF Transaction ID aware operations for NMDA Compare.
 
-     Copyright (c) 2022 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -52,39 +48,31 @@ module ietf-netconf-txid-yang-push {
      they appear in all capitals, as shown here.
     ";
 
-  revision 2022-04-01 {
+  revision 2025-08-01 {
     description
       "Initial revision";
     reference
       "RFC XXXX: Transaction ID Mechanism for NETCONF";
   }
 
-  augment "/sn:establish-subscription/sn:input" {
+  augment "/cmp:compare/cmp:input" {
     description
-      "This augmentation adds additional subscription parameters
-       that apply specifically to datastore updates to RPC input.";
+      "This augmentation makes it possible for clients to request
+       txids to be returned.";
     uses ietf-netconf-txid:txid-grouping;
   }
 
-  augment "/sn:modify-subscription/sn:input" {
-    description
-      "This augmentation adds additional subscription parameters
-       specific to datastore updates.";
-    uses ietf-netconf-txid:txid-grouping;
-  }
-
-  augment "/sn:subscriptions/sn:subscription" {
-    description
-      "This augmentation adds additional subscription parameters
-       specific to datastore updates.";
-    uses ietf-netconf-txid:txid-grouping;
-  }
-
-  augment "/yp:push-change-update/yp:datastore-changes/"
-        + "yp:yang-patch" {
+  augment "/cmp:compare/cmp:output/cmp:compare-response/"
+        + "cmp:differences/cmp:differences/cmp:yang-patch/cmp:edit" {
     description
       "This augmentation makes it possible for servers to return
        txid-values.";
-    uses ietf-netconf-txid:txid-value-grouping;
+    container most-recent {
+      description
+        "The txid value returned by the server MUST be the
+         txid value pertaining to the target node in the source or
+         target datastores that is the most recent.";
+      uses ietf-netconf-txid:txid-value-grouping;
+    }
   }
 }
