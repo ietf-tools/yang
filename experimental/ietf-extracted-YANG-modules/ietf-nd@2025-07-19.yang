@@ -24,10 +24,10 @@ module ietf-nd {
   }
 
   organization
-    "IETF Routing Area Working Group (rtgwg)";
+    "IETF IPv6 Maintenance Working Group (6man)";
   contact
-    "WG Web:  <https://datatracker.ietf.org/wg/rtgwg/>
-     WG List: <mailto: rtgwg@ietf.org>
+    "WG Web:  <https://datatracker.ietf.org/wg/6man/>
+     WG List: <mailto: 6man@ietf.org>
 
      Author:  Fan Zhang
               <zhangf52@chinatelecom.cn>
@@ -42,7 +42,8 @@ module ietf-nd {
      IPv6 Neighbor Discovery (ND) and related functions, including
      IPv6 address resolution, redirect function, proxy Neighbor
      Advertisement, Neighbor Unreachability Detection (NUD), Duplicate
-     Address Detection (DAD), and SEcure Neighbor Discovery (SEND).
+     Address Detection (DAD), SEcure Neighbor Discovery (SEND), and
+     Secure ND Proxy.
 
      The model is based on YANG 1.1 as defined in RFC 7950 and
      conforms to Network Management Datastore Architecture (NMDA)
@@ -75,15 +76,14 @@ module ietf-nd {
     description
       "Init revision";
     reference
-      "RFC XXXX: YANG Data Model for IPv6 Address Resolution";
+      "RFC XXXX: YANG Data Model for IPv6 Neighbor Discovery";
   }
 
   /* Data nodes */
 
   container nd {
     description
-      "Global parameters for IPv6 address resolution based on IPv6
-       ND.";
+      "Global parameters for IPv6 ND.";
     leaf stale-timeout {
       type uint32;
       units "second";
@@ -116,7 +116,8 @@ module ietf-nd {
       }
       container RSA-signature-option-reception {
         description
-          "Parameter for the node that support the reception of the RSA Signature options.";
+          "Parameter for the node that support the reception of the RSA
+           Signature options.";
         leaf ns-authorization-method {
           type enumeration {
             enum trust-anchor {
@@ -137,7 +138,8 @@ module ietf-nd {
             }
           }
           description
-            "The method to verify the authority of the sender of NS messages.";
+            "The method to verify the authority of the sender of NS
+             messages.";
         }
         leaf na-authorization-method {
           type enumeration {
@@ -159,7 +161,8 @@ module ietf-nd {
             }
           }
           description
-            "The method to verify the authority of the sender of NA messages.";
+            "The method to verify the authority of the sender of NA
+             messages.";
         }
         leaf rs-authorization-method {
           type enumeration {
@@ -181,7 +184,8 @@ module ietf-nd {
             }
           }
           description
-            "The method to verify the authority of the sender of RS messages.";
+            "The method to verify the authority of the sender of RS
+             messages.";
         }
         leaf ra-authorization-method {
           type enumeration {
@@ -203,7 +207,8 @@ module ietf-nd {
             }
           }
           description
-            "The method to verify the authority of the sender of RA messages.";
+            "The method to verify the authority of the sender of RA
+             messages.";
         }
         leaf redirect-authorization-method {
           type enumeration {
@@ -225,7 +230,8 @@ module ietf-nd {
             }
           }
           description
-            "The method to verify the authority of the sender of Redirect messages.";
+            "The method to verify the authority of the sender of
+             Redirect messages.";
         }
       }
       container timestamp {
@@ -261,10 +267,10 @@ module ietf-nd {
   augment "/if:interfaces/if:interface/ip:ipv6" {
     description
       "Augments interface configuration and state data with
-       parameters of IPv6 address resolution.";
+       parameters of IPv6 ND.";
     container nd {
       description
-        "Parameters of IPv6 address resolution.";
+        "Parameters of IPv6 ND.";
       leaf dynamic-discovery {
         type boolean;
         default "true";
@@ -378,7 +384,8 @@ module ietf-nd {
         description
           "Controls whether Secure ND Proxy is enabled or disabled.";
         reference
-          "RFC6496: Secure Proxy ND Support for SEcure Neighbor Discovery (SEND)";
+          "RFC6496: Secure Proxy ND Support for SEcure Neighbor
+           Discovery (SEND)";
       }
       container statistics {
         config false;
