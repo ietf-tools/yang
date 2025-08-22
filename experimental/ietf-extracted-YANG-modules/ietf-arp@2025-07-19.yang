@@ -20,10 +20,10 @@ module ietf-arp {
   }
 
   organization
-    "IETF Routing Area Working Group (rtgwg)";
+    "IETF Internet Area Working Group (intarea)";
   contact
-    "WG Web:  <https://datatracker.ietf.org/wg/rtgwg/>
-     WG List: <mailto: rtgwg@ietf.org>
+    "WG Web:  <https://datatracker.ietf.org/wg/intarea/>
+     WG List: <mailto: int-area@ietf.org>
 
      Author:  Feng Zheng
               <habby.zheng@huawei.com>
