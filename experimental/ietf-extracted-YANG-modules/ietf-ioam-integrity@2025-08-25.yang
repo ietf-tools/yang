@@ -45,7 +45,7 @@ module ietf-ioam-integrity {
      This version of this YANG module is part of RFC XXXX; see the
      RFC itself for full legal notices.";
 
-  revision 2024-08-31 {
+  revision 2025-08-25 {
     description
       "Initial revision.";
     reference
