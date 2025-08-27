@@ -1,7 +1,6 @@
 module ietf-nd {
   yang-version 1.1;
-  namespace
-    "urn:ietf:params:xml:ns:yang:ietf-nd";
+  namespace "urn:ietf:params:xml:ns:yang:ietf-nd";
   prefix nd;
 
   import ietf-inet-types {
@@ -42,8 +41,7 @@ module ietf-nd {
      IPv6 Neighbor Discovery (ND) and related functions, including
      IPv6 address resolution, redirect function, proxy Neighbor
      Advertisement, Neighbor Unreachability Detection (NUD), Duplicate
-     Address Detection (DAD), SEcure Neighbor Discovery (SEND), and
-     Secure ND Proxy.
+     Address Detection (DAD), and Enhanced Duplicate Address Detection.
 
      The model is based on YANG 1.1 as defined in RFC 7950 and
      conforms to Network Management Datastore Architecture (NMDA)
@@ -70,9 +68,10 @@ module ietf-nd {
      they appear in all capitals, as shown here.";
   reference
     "RFC4861: Neighbor Discovery for IP version 6 (IPv6)
-     RFC4862: IPv6 Stateless Address Autoconfiguration";
+     RFC4862: IPv6 Stateless Address Autoconfiguration
+     RFC7527: Enhanced Duplicate Address Detection";
 
-  revision 2025-07-19 {
+  revision 2025-08-26 {
     description
       "Init revision";
     reference
@@ -93,174 +92,6 @@ module ietf-nd {
       reference
         "RFC4861: Neighbor Discovery for IP version 6 (IPv6)
                   Section 5.3";
-    }
-    container secure-nd {
-      description
-        "Global parameters for SEcure Neighbor Discovery (SEND).";
-      leaf cga-flag {
-        type boolean;
-        description
-          "Flag to indicate whether the node is using CGA.";
-      }
-      leaf minbits {
-        type uint32;
-        default "1024";
-        description
-          "The minimum acceptable key length for public keys used
-           in the generation of CGAs.";
-      }
-      leaf keypair {
-        type string;
-        description
-          "The public-private key pair used for RSA signatures.";
-      }
-      container RSA-signature-option-reception {
-        description
-          "Parameter for the node that support the reception of the RSA
-           Signature options.";
-        leaf ns-authorization-method {
-          type enumeration {
-            enum trust-anchor {
-              description
-                "The sender's authority is verified via trust anchor.";
-            }
-            enum cga {
-              description
-                "The sender's authority is verified via CGA.";
-            }
-            enum trust-anchor-and-cga {
-              description
-                "Both trust anchor and CGA verification are required.";
-            }
-            enum trust-anchor-or-cga {
-              description
-                "Either trust anchor or CGA verification is required.";
-            }
-          }
-          description
-            "The method to verify the authority of the sender of NS
-             messages.";
-        }
-        leaf na-authorization-method {
-          type enumeration {
-            enum trust-anchor {
-              description
-                "The sender's authority is verified via trust anchor.";
-            }
-            enum cga {
-              description
-                "The sender's authority is verified via CGA.";
-            }
-            enum trust-anchor-and-cga {
-              description
-                "Both trust anchor and CGA verification are required.";
-            }
-            enum trust-anchor-or-cga {
-              description
-                "Either trust anchor or CGA verification is required.";
-            }
-          }
-          description
-            "The method to verify the authority of the sender of NA
-             messages.";
-        }
-        leaf rs-authorization-method {
-          type enumeration {
-            enum trust-anchor {
-              description
-                "The sender's authority is verified via trust anchor.";
-            }
-            enum cga {
-              description
-                "The sender's authority is verified via CGA.";
-            }
-            enum trust-anchor-and-cga {
-              description
-                "Both trust anchor and CGA verification are required.";
-            }
-            enum trust-anchor-or-cga {
-              description
-                "Either trust anchor or CGA verification is required.";
-            }
-          }
-          description
-            "The method to verify the authority of the sender of RS
-             messages.";
-        }
-        leaf ra-authorization-method {
-          type enumeration {
-            enum trust-anchor {
-              description
-                "The sender's authority is verified via trust anchor.";
-            }
-            enum cga {
-              description
-                "The sender's authority is verified via CGA.";
-            }
-            enum trust-anchor-and-cga {
-              description
-                "Both trust anchor and CGA verification are required.";
-            }
-            enum trust-anchor-or-cga {
-              description
-                "Either trust anchor or CGA verification is required.";
-            }
-          }
-          description
-            "The method to verify the authority of the sender of RA
-             messages.";
-        }
-        leaf redirect-authorization-method {
-          type enumeration {
-            enum trust-anchor {
-              description
-                "The sender's authority is verified via trust anchor.";
-            }
-            enum cga {
-              description
-                "The sender's authority is verified via CGA.";
-            }
-            enum trust-anchor-and-cga {
-              description
-                "Both trust anchor and CGA verification are required.";
-            }
-            enum trust-anchor-or-cga {
-              description
-                "Either trust anchor or CGA verification is required.";
-            }
-          }
-          description
-            "The method to verify the authority of the sender of
-             Redirect messages.";
-        }
-      }
-      container timestamp {
-        description
-          "Parameters of Timestamp option.";
-        leaf timestamp-delta {
-          type uint32;
-          units "second";
-          default "300";
-          description
-            "The allowed timestamp Delta value.";
-        }
-        leaf timestamp-fuzz {
-          type uint32;
-          units "second";
-          default "1";
-          description
-            "The 'fuzz factor' for comparisons.";
-        }
-        leaf timestamp-drift {
-          type uint8;
-          units "percent";
-          default "1";
-          description
-            "The allowed clock drift parameter.";
-        }
-      }
-      reference
-        "RFC3971: SEcure Neighbor Discovery (SEND)";
     }
   }
 
@@ -362,30 +193,28 @@ module ietf-nd {
           "RFC4861: Neighbor Discovery for IP version 6 (IPv6)
                     Section 7.2.8";
       }
-      container secure-nd {
+      container enhanced-dad {
         description
-          "Parameters of SEcure Neighbor Discovery (SEND).";
-        leaf cga-flag {
+          "Parameters of Enhanced DAD algorithm.";
+        leaf enable {
           type boolean;
+          default "false";
           description
-            "Flag to indicate whether the interface is using CGA.";
+            "Controls whether Enhanced DAD algorithm is enabled or
+             disabled.";
         }
-        leaf modifier {
-          type inet:ipv6-address;
+        leaf enhanced-dad-auto-resolve {
+          type boolean;
+          default "false";
           description
-            "Modifier for CGA.";
+            "Controls whether the automated action is taken when
+             detecting duplicates. A trusted router can log a system
+             management message, drop the received ND message, and
+             block the untrusted IPv6 host nodes from which the
+             duplicate NS(DAD) or NA message was received.";
         }
         reference
-          "RFC3971: SEcure Neighbor Discovery (SEND)";
-      }
-      leaf secure-proxy-nd {
-        type boolean;
-        default "false";
-        description
-          "Controls whether Secure ND Proxy is enabled or disabled.";
-        reference
-          "RFC6496: Secure Proxy ND Support for SEcure Neighbor
-           Discovery (SEND)";
+          "RFC7527: Enhanced Duplicate Address Detection";
       }
       container statistics {
         config false;
