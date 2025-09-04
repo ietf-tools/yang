@@ -29,7 +29,7 @@ module ietf-if-vlan-encapsulation {
   organization
     "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
   contact
-    "WG Web:   <http://tools.ietf.org/wg/netmod/>
+    "WG Web:   <http://datatracker.ietf.org/wg/netmod/>
      WG List:  <mailto:netmod@ietf.org>
 
      Editors:
@@ -60,9 +60,9 @@ module ietf-if-vlan-encapsulation {
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
      they appear in all capitals, as shown here.";
 
-  revision 2025-04-09 {
+  revision 2025-09-03 {
     description
-      "VLAN encapsulations YANG model";
+      "Initial version of the module";
     reference
       "RFC BBBB: Sub-interface VLAN YANG Data Models";
   }

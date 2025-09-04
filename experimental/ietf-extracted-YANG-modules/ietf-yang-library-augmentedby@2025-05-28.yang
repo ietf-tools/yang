@@ -19,7 +19,7 @@ module ietf-yang-library-augmentedby {
      Authors:   Zhuoyao Lin
                <mailto:zhuoyao.lin1@huawei-partners.com>
                Benoit Claise
-               <mailto:benoit.claise@huawei.com>
+               <mailto:Benoit@everything-ops.net>
                Ignacio Dominguez Martinez-Casanueva
                <matilto:ignacio.dominguezmartinez@telefonica.com>";
   description
@@ -88,7 +88,7 @@ module ietf-yang-library-augmentedby {
        The 'augmented-by' leaf-list should only consider those YANG
        modules that directly augment the YANG module associated
        with this entry, and the augmenting and augmented modules
-       should be defined in the same module-set.
+       must be defined in the same module-set.
 
        The 'directly augment' is identified by the relationship
        between the augment module and the target node's parent
@@ -110,7 +110,7 @@ module ietf-yang-library-augmentedby {
        The 'augmented-by' leaf-list should only consider those YANG
        modules that directly augment the YANG module associated
        with this entry, and the augmenting and augmented modules
-       should be defined in the same module-set.
+       must be defined in the same module-set.
 
        The 'directly augment' is identified by the relationship
        between the augment module and the target node's parent

@@ -30,7 +30,7 @@ module ietf-if-flexible-encapsulation {
   organization
     "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
   contact
-    "WG Web:   <http://tools.ietf.org/wg/netmod/>
+    "WG Web:   <http://datatracker.ietf.org/wg/netmod/>
      WG List:  <mailto:netmod@ietf.org>
 
      Editors:
@@ -61,9 +61,9 @@ module ietf-if-flexible-encapsulation {
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
      they appear in all capitals, as shown here.";
 
-  revision 2025-04-09 {
+  revision 2025-09-03 {
     description
-      "Interface flexible encapsulations YANG model";
+      "Initial version of the module";
     reference
       "RFC BBBB: Sub-interface VLAN YANG Data Models";
   }
@@ -71,7 +71,7 @@ module ietf-if-flexible-encapsulation {
   feature flexible-rewrites {
     description
       "This feature indicates that the network element supports
-        specifying flexible rewrite operations.";
+       specifying flexible rewrite operations.";
   }
 
   feature asymmetric-rewrites {
@@ -314,7 +314,7 @@ module ietf-if-flexible-encapsulation {
              sub-interface with the most specific match.  E.g.,
              matching two VLAN tags in the frame is more specific
              than matching the outermost VLAN tag, which is more
-             specific than the catch all 'default' match.";
+             specific than the catch-all 'default' match.";
           uses flexible-match;
         }
         container rewrite {

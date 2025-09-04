@@ -25,7 +25,7 @@ module ietf-if-extensions {
     "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
 
   contact
-    "WG Web:   <http://tools.ietf.org/wg/netmod/>
+    "WG Web:   <https://datatracker.ietf.org/wg/netmod/about/>
      WG List:  <mailto:netmod@ietf.org>
 
      Editor:   Robert Wilton
@@ -35,9 +35,9 @@ module ietf-if-extensions {
                <mailto:scott.mansfield@ericsson.com>";
 
   description
-    "This module contains common definitions for extending the IETF
-     interface YANG model (RFC 8343) with common configurable layer 2
-     properties.
+    "This module contains definitions for extending the IETF
+     interface YANG model (RFC 8343) with common configurable
+     layer 2 properties.
 
      Copyright (c) 2025 IETF Trust and the persons identified as
 
@@ -60,9 +60,9 @@ module ietf-if-extensions {
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
      they appear in all capitals, as shown here.";
 
-  revision 2025-01-27 {
+  revision 2025-08-07 {
     description
-      "Interface Extension YANG Module initial revision";
+      "Initial revision";
 
     reference
       "RFC XXXX, Common Interface Extension YANG Data Models";
@@ -87,15 +87,15 @@ module ietf-if-extensions {
 
   feature loopback {
     description
-      "This feature indicates that configurable interface loopback is
-       supported.";
+      "This feature indicates that configurable interface loopback
+       is supported.";
     reference "RFC XXXX, Section 2.4 Loopback";
   }
 
   feature max-frame-size {
     description
-      "This feature indicates that the device supports configuring or
-       reporting the maximum frame size on interfaces.";
+      "This feature indicates that the device supports configuring
+       or reporting the maximum frame size on interfaces.";
     reference "RFC XXXX, Section 2.5 Maximum Frame Size";
   }
 
@@ -103,18 +103,18 @@ module ietf-if-extensions {
     description
       "This feature indicates that the device supports the
        instantiation of sub-interfaces.  Sub-interfaces are defined
-       as logical child interfaces that allow features and forwarding
-       decisions to be applied to a subset of the traffic processed
-       on the specified parent interface.";
+       as logical child interfaces that allow features and
+       forwarding decisions to be applied to a subset of the traffic
+       processed on the specified parent interface.";
     reference "RFC XXXX, Section 2.6 Sub-interface";
   }
 
   feature peer-interface {
     description
       "This feature indicates that the device supports the
-       specification of peer-interfaces.  A Peer-interface is defined
-       as logical peer that receives egress traffic of the given
-       interface on its ingress path and vice versa.";
+       specification of peer-interfaces.  A Peer-interface is
+       defined as logical peer that receives egress traffic of the
+       given interface on its ingress path and vice versa.";
     reference "RFC XXXX, Section 2.8 Peer-interface";
   }
 
@@ -166,12 +166,13 @@ module ietf-if-extensions {
   identity network {
     base forwarding-mode;
     description
-      "Network layer based forwarding, such as IP, MPLS, or L3VPNs.";
+      "Network layer based forwarding, such as IP, MPLS,
+       or L3VPNs.";
     reference "RFC XXXX, Section 2.7";
   }
 
   /*
-   * Augments the IETF interfaces model with leaves to configure
+   * Augments the IETF interfaces model with leafs to configure
    * and monitor link-flap-suppression on an interface.
    */
   augment "/if:interfaces/if:interface" {
@@ -191,15 +192,16 @@ module ietf-if-extensions {
         type uint32;
         units milliseconds;
         description
-          "Delays the propagation of a 'loss of carrier signal' event
-           that would cause the interface state to go down, i.e. the
-           command allows short link flaps to be suppressed. The
-           configured value indicates the minimum time interval (in
-           milliseconds) that the link signal must be continuously
-           down before the interface state is brought down. If not
-           configured, the behavior on loss of link signal is
-           vendor/interface specific, but with the general
-           expectation that there should be little or no delay.";
+          "Delays the propagation of a 'loss of carrier signal'
+           event that would cause the interface state to go down,
+           i.e., the command allows short link flaps to be
+           suppressed. The configured value indicates the minimum
+           time interval (in milliseconds) that the link signal must
+           be continuously down before the interface state is
+           brought down. If not configured, the behavior on loss of
+           link signal is vendor/interface specific, but with the
+           general expectation that there should be little or no
+           delay.";
       }
       leaf up {
         type uint32;
@@ -211,9 +213,10 @@ module ietf-if-extensions {
            from down to up.  If not configured, the behavior is
            vendor/interface specific, but with the general
            expectation that sufficient default delay should be used
-           to ensure that the interface is stable when enabled before
-           being reported as being up.  Configured values that are
-           too low for the hardware capabilties may be rejected.";
+           to ensure that the interface is stable when enabled
+           before being reported as being up.  Configured values
+           that are too low for the hardware capabilities may be
+           rejected.";
       }
       leaf carrier-transitions {
         type yang:counter64;
@@ -221,10 +224,10 @@ module ietf-if-extensions {
         config false;
         description
           "Defines the number of times the underlying link state
-           has changed to, or from, state up.  This counter should be
-           incremented even if the high layer interface state changes
-           are being suppressed by a running link flap suppression
-           timer.";
+           has changed to, or from, state up.  This counter should
+           be incremented even if the high layer interface state
+           changes are being suppressed by a running link flap
+           suppression timer.";
       }
       leaf timer-running {
         type enumeration {
@@ -265,8 +268,8 @@ module ietf-if-extensions {
         "Enable interface link flap dampening with default settings
          (that are vendor/device specific).";
       description
-        "Interface dampening limits the propagation of interface link
-         state flaps over longer periods.";
+        "Interface dampening limits the propagation of interface
+         link state flaps over longer periods.";
       reference "RFC XXXX, Section 2.2 Dampening";
 
       leaf half-life {
@@ -287,7 +290,7 @@ module ietf-if-extensions {
         type uint32;
         description
           "Penalty value below which a stable interface is
-           unsuppressed (i.e. brought up) (no units).  The default
+           unsuppressed (i.e., brought up) (no units).  The default
            value is vendor/device specific.  The penalty value for a
            link up->down state change is 1000 units.";
         reference "RFC XXXX, Section 2.2.3 Reuse Threshold";
@@ -296,11 +299,11 @@ module ietf-if-extensions {
       leaf suppress {
         type uint32;
         description
-          "Limit at which an interface is suppressed (i.e. held down)
-           when its penalty exceeds that limit (no units).  The value
-           must be greater than the reuse threshold.  The default
-           value is vendor/device specific.  The penalty value for a
-           link up->down state change is 1000 units.";
+          "Limit at which an interface is suppressed (i.e., held
+           down) when its penalty exceeds that limit (no units).
+           The value must be greater than the reuse threshold.  The
+           default value is vendor/device specific.  The penalty
+           value for a link up->down state change is 1000 units.";
         reference "RFC XXXX, Section 2.2.1 Suppress Threshold";
       }
 
@@ -311,8 +314,8 @@ module ietf-if-extensions {
           "Maximum time (in seconds) that an interface can be
            suppressed before being unsuppressed if no further link
            up->down state change penalties have been applied.  This
-           value effectively acts as a ceiling that the penalty value
-           cannot exceed.  The default value is vendor/device
+           value effectively acts as a ceiling that the penalty
+           value cannot exceed.  The default value is vendor/device
            specific.";
         reference "RFC XXXX, Section 2.2.4 Maximum Suppress Time";
       }
@@ -323,7 +326,7 @@ module ietf-if-extensions {
         description
           "The current penalty value for this interface.  When the
            penalty value exceeds the 'suppress' leaf then the
-           interface is suppressed (i.e. held down).";
+           interface is suppressed (i.e., held down).";
         reference "RFC XXXX, Section 2.2 Dampening";
       }
 
@@ -331,8 +334,8 @@ module ietf-if-extensions {
         type boolean;
         config false;
         description
-          "Represents whether the interface is suppressed (i.e. held
-           down) because the 'penalty' leaf value exceeds the
+          "Represents whether the interface is suppressed (i.e.,
+           held down) because the 'penalty' leaf value exceeds the
            'suppress' leaf.";
         reference "RFC XXXX, Section 2.2 Dampening";
       }
@@ -398,7 +401,7 @@ module ietf-if-extensions {
             derived-from-or-self(../if:type, 'ianaift:atm') or
             derived-from-or-self(../if:type, 'ianaift:otnOtu')" {
         description
-          "All interface types that support loopback configuration.";
+          "All interface types supporting loopback configuration.";
       }
       if-feature "loopback";
       type identityref {
@@ -423,9 +426,9 @@ module ietf-if-extensions {
 
          If configured, the max-frame-size also limits the maximum
          frame size of any child sub-interfaces.  The MTU available
-         to higher layer protocols is restricted to the maximum frame
-         payload size, and MAY be further restricted by explicit
-         layer 3 or protocol specific MTU configuration.";
+         to higher layer protocols is restricted to the maximum
+         frame payload size, and MAY be further restricted by
+         explicit layer 3 or protocol specific MTU configuration.";
 
       reference "RFC XXXX, Section 2.5 Maximum Frame Size";
     }
@@ -463,8 +466,8 @@ module ietf-if-extensions {
    */
   augment "/if:interfaces/if:interface" {
     when "derived-from-or-self(if:type, 'ianaift:l2vlan') or
-          derived-from-or-self(if:type, 'ianaift:atmSubInterface') or
-          derived-from-or-self(if:type, 'ianaift:frameRelay')"  {
+          derived-from-or-self(if:type, 'ianaift:atmSubInterface')
+          or derived-from-or-self(if:type, 'ianaift:frameRelay')"  {
       description
         "Any ianaift:types that explicitly represent
          sub-interfaces.";
@@ -495,16 +498,16 @@ module ietf-if-extensions {
        counter";
     leaf in-discard-overflows {
       type yang:counter64;
-      units frames;
+      units packets;
       description
-        "A count of the number of frames discarded because of
+        "A count of the number of packets discarded because of
          overflows, e.g., because there were insufficient
          resources to buffer or process the frame.
 
-         This counter does not include frames that were discarded
+         This counter does not include packets that were discarded
          due to a QOS policy.
 
-         For consistency, frames counted against this counter are
+         For consistency, packets counted against this counter are
          also counted against the IETF interfaces statistics.  In
          particular, they are included in in-octets and in-discards,
          but are not included in in-unicast-pkts, in-multicast-pkts
@@ -515,8 +518,7 @@ module ietf-if-extensions {
          re-initialization of the management system, and at other
          times as indicated by the value of the 'discontinuity-time'
          leaf defined in the ietf-interfaces YANG module
-         (RFC 8343).
-          ";
+         (RFC 8343).";
     }
   }
 
@@ -530,8 +532,8 @@ module ietf-if-extensions {
                                'ianaift:ieee8023adLag') or
           derived-from-or-self(../if:type, 'ianaift:ifPwType')" {
       description
-        "Applies to interfaces that can demultiplex ingress frames to
-         sub-interfaces.";
+        "Applies to interfaces that can demultiplex ingress packets
+         to sub-interfaces.";
     }
     if-feature "sub-interfaces";
 
@@ -540,16 +542,16 @@ module ietf-if-extensions {
        demux discard counter.";
     leaf in-discard-unknown-encaps {
       type yang:counter64;
-      units frames;
+      units packets;
       description
-        "A count of the number of frames that were well formed, but
-         otherwise discarded because their encapsulation does not
-         classify the frame to the interface or any child
-         sub-interface.  E.g., a frame might be discarded because the
+        "A count of the number of packets that were well-formed,
+         but otherwise discarded because their encapsulation does
+         not classify the packet to the interface or any child
+         sub-interface.  E.g., a packet might be discarded because
          it has an unknown VLAN Id, or does not have a VLAN Id when
          one is expected.
 
-         For consistency, frames counted against this counter are
+         For consistency, packets counted against this counter are
          also counted against the IETF interfaces statistics.  In
          particular, they are included in in-octets and in-discards,
          but are not included in in-unicast-pkts, in-multicast-pkts
