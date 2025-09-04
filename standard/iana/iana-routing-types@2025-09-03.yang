@@ -32,6 +32,14 @@ module iana-routing-types {
      This version of this YANG module is part of RFC 8294; see
      the RFC itself for full legal notices.";
 
+   revision 2025-09-03 {
+     description
+       "Modified SAFI value 76.";
+     reference
+       "https://www.iana.org/assignments/yang-parameters/"
+     + "iana-routing-types@2025-09-03.yang";
+  }
+
    revision 2025-02-18 {
      description "Modified SAFI value 73.";
   }
@@ -559,7 +567,7 @@ module iana-routing-types {
       enum classful-transport-safi {
         value 76;
         description
-          "Classful-Transport SAFI.";
+          "Classful Transport (CT) SAFI.";
       }
 
       enum tunneled-traffic-flowspec-safi {
