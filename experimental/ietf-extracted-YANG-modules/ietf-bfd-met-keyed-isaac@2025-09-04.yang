@@ -1,7 +1,7 @@
 module ietf-bfd-met-keyed-isaac {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-bfd-met-keyed-isaac";
-  prefix "bfdmia";
+  prefix "bfd-mki";
 
   import ietf-key-chain {
     prefix key-chain;
@@ -23,9 +23,9 @@ module ietf-bfd-met-keyed-isaac {
               Sonal Agarwal (sonal@arrcus.com).";
 
   description
-    "This experimental YANG module provides identities derived from
-     the ietf-key-chain model for the BFD Meticulous Keyed ISAAC
-     authentication mechanism.
+    "This YANG module provides identities derived from the
+     ietf-key-chain model for the experimental BFD Meticulous Keyed
+     ISAAC authentication mechanism.
 
      Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
@@ -39,19 +39,14 @@ module ietf-bfd-met-keyed-isaac {
 
      This version of this YANG module is part of RFC XXXX
      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
-     for full legal notices.
+     for full legal notices.";
 
-     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
-     NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
-     'MAY', and 'OPTIONAL' in this document are to be interpreted as
-     described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
-     they appear in all capitals, as shown here.";
-
-  revision "2025-08-27" {
+  revision "2025-09-04" {
     description
       "Initial Version.";
     reference
-      "RFC XXXX: Meticulous Keyed ISAAC for BFD Authentication.";
+      "RFC XXXX: Meticulous Keyed ISAAC for BFD Optimized
+       Authentication.";
   }
 
   identity optimized-md5-meticulous-keyed-isaac {
@@ -61,7 +56,8 @@ module ietf-bfd-met-keyed-isaac {
        strong authentication and Meticulous Keyed ISAAC Keyed as the
        less computationally intensive authentication.";
     reference
-      "RFC XXXX: Meticulous Keyed ISAAC for BFD Authentication.";
+      "RFC XXXX: Meticulous Keyed ISAAC for BFD Optimized
+       Authentication.";
   }
 
   identity optimized-sha1-meticulous-keyed-isaac {
@@ -71,6 +67,7 @@ module ietf-bfd-met-keyed-isaac {
        the strong authentication and Meticulous Keyed ISAAC Keyed as
        the less computationally intensive authentication.";
     reference
-      "RFC XXXX: Meticulous Keyed ISAAC for BFD Authentication.";
+      "RFC XXXX: Meticulous Keyed ISAAC for BFD Optimized
+       Authentication.";
   }
 }

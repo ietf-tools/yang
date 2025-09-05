@@ -1,7 +1,7 @@
 module ietf-bfd-opt-auth {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-bfd-opt-auth";
-  prefix "bfdoa";
+  prefix "bfd-oa";
 
   import ietf-routing {
     prefix "rt";
@@ -88,7 +88,7 @@ module ietf-bfd-opt-auth {
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
      they appear in all capitals, as shown here.";
 
-  revision "2025-08-27" {
+  revision "2025-09-04" {
     description
       "Initial Version.";
     reference
@@ -97,28 +97,10 @@ module ietf-bfd-opt-auth {
 
   feature optimized-auth {
     description
-      "When enabled, this implementation supports optimized
-       authentication as described in this document.";
-  }
-
-  identity optimized-md5-meticulous-keyed-isaac {
-    base key-chain:crypto-algorithm;
-    description
-      "BFD Optimized Authentication using Meticulous Keyed MD5 as the
-       strong authentication and Meticulous Keyed ISAAC Keyed as the
-       less computationally intensive authentication.";
+      "Indicates that the implementation supports optimized
+       authentication.";
     reference
-      "RFC XXXX: Meticulous Keyed ISAAC for BFD Authentication.";
-  }
-
-  identity optimized-sha1-meticulous-keyed-isaac {
-    base key-chain:crypto-algorithm;
-    description
-      "BFD Optimized Authentication using Meticulous Keyed SHA-1 as
-      the strong authentication and Meticulous Keyed ISAAC Keyed as
-      the less computationally intensive authentication.";
-    reference
-      "RFC XXXX: Meticulous Keyed ISAAC for BFD Authentication.";
+      "RFC XXXX: Optimizing BFD Authentication.";
   }
 
   grouping bfd-opt-auth-config {
@@ -131,7 +113,6 @@ module ietf-bfd-opt-auth {
       description
         "Interval of time after which strong authentication
          should be utilized to prevent an on-path-attacker attack.
-         Default is 1 minute.
 
          A value of zero means that we do not do periodic
          reauthentication using the strong authentication method.
@@ -159,7 +140,6 @@ module ietf-bfd-opt-auth {
           "bfd-ip-mh:session-groups/bfd-ip-mh:session-group/" +
           "bfd-ip-mh:authentication" {
     uses bfd-opt-auth-config;
-
     description
       "Augment the 'authentication' container for multi-hop BFD
        module to add attributes related to BFD optimized
