@@ -75,7 +75,7 @@ module ietf-yang-push-telemetry-message {
      This version of this YANG module is part of RFC XXXX; see the RFC
      itself for full legal notices.";
 
-  revision 2025-06-10 {
+  revision 2025-08-15 {
     description
       "Initial revision.";
     reference
@@ -239,30 +239,33 @@ module ietf-yang-push-telemetry-message {
           }
         }
       }
-      list module-version {
-        key "module-name";
+      list module {
+        key "name";
         config false;
         description
-          "List of yang-push-module-version grouping. The revision is
-           not configurable.";
-        leaf module-name {
+          "List of yang-push-module-version grouping defined in
+           draft-ietf-netconf-yang-notifications-versioning. The
+           revision is not configurable.";
+        leaf name {
           type yang:yang-identifier;
           config false;
           description
-            "This references the YANG module name.";
+            "This references the YANG module name, section 7.1 of
+             RFC 7950.";
         }
         leaf revision {
           type rev:revision-date;
           config false;
           description
-            "This references the YANG module revision of the sent
-             notification message.";
+            "This references the YANG module revision, section 7.1.2
+             of RFC 7950, of the sent notification message.";
         }
-        leaf revision-label {
+        leaf version {
           type ysver:version;
           description
-            "This references the YANG module semantic version of the
-             sent notification message.";
+            "This references the YANG module semantic version,
+             draft-ietf-netmod-yang-semver, of the sent notification
+						 message.";
         }
       }
       leaf yang-library-content-id {

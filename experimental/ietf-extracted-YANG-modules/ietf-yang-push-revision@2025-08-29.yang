@@ -11,7 +11,7 @@ module ietf-yang-push-revision {
   import ietf-yang-revisions {
     prefix rev;
     reference
-      "RFC YYYY: draft-ietf-netmod-yang-module-versioning-11,
+      "RFC YYYY: draft-ietf-netmod-yang-module-versioning-13,
       Updated YANG Module Revision Handling";
   }
   import ietf-yang-types {
@@ -23,7 +23,7 @@ module ietf-yang-push-revision {
   import ietf-yang-semver {
     prefix ysver;
     reference
-      "RFC ZZZZ: draft-ietf-netmod-yang-semver-15, YANG Semantic
+      "RFC ZZZZ: draft-ietf-netmod-yang-semver-23, YANG Semantic
       Versioning";
   }
   import ietf-yang-library {
@@ -57,9 +57,9 @@ module ietf-yang-push-revision {
                <mailto:alex.huang-feng@insa-lyon.fr>";
 
   description
-    "Defines YANG-Push event notification header with the revision and
-    the revision-label. Adds the support of the revision and
-    revision-label selection in the YANG-Push subscription RPCs.
+    "Defines YANG-Push event notification header with the revision
+    and the version. Adds the support of the revision and
+    version selection in the YANG-Push subscription RPCs.
 
     Copyright (c) 2025 IETF Trust and the persons
     identified as authors of the code.  All rights reserved.
@@ -76,9 +76,15 @@ module ietf-yang-push-revision {
     (https://www.iana.org/assignments/yang-parameters).
 
     This version of this YANG module is part of RFC XXXX; see the RFC
-    itself for full legal notices.";
+    itself for full legal notices.
 
-  revision 2025-04-05 {
+    The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
+    NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
+    'MAY', and 'OPTIONAL' in this document are to be interpreted as
+    described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
+    they appear in all capitals, as shown here.";
+
+  revision 2025-08-29 {
     description
       "First revision";
     reference
@@ -90,7 +96,7 @@ module ietf-yang-push-revision {
     description
       "This feature indicates the YANG Subscription Notifications
       supports specifying the list of modules, revisions and
-      revision-label in the YANG subscription.";
+      version in the YANG subscription.";
   }
 
   // Identities
@@ -98,36 +104,37 @@ module ietf-yang-push-revision {
     base sn:establish-subscription-error;
     base sn:modify-subscription-error;
     description
-      "Revision not supported.  This failure can be due to subscribing
-      to a specific revision not supported by the publisher.";
-  }
-
-  identity revision-label-unsupported {
-    base sn:establish-subscription-error;
-    base sn:modify-subscription-error;
-    description
-      "Revision-label not supported.  This failure can be due to 
-      subscribing to a specific revision-label not supported by the
+      "Revision not supported.  This failure can be due to
+      subscribing to a specific revision not supported by the
       publisher.";
   }
 
-  identity incompatible-revision-and-revision-label {
+  identity version-unsupported {
     base sn:establish-subscription-error;
     base sn:modify-subscription-error;
     description
-      "The combination of revision and the revision-label are
+      "Version not supported.  This failure can be due to 
+      subscribing to a specific version not supported by the
+      publisher.";
+  }
+
+  identity incompatible-revision-and-version {
+    base sn:establish-subscription-error;
+    base sn:modify-subscription-error;
+    description
+      "The combination of revision and the version are
       incompatible. This failure happens when the revision and the
-      revision-label are both specified in the RPC and the YANG
+      version are both specified in the RPC and the YANG
       module supported by the publisher does not support one of the
-      revision or the revision-label.";
+      revision or the version.";
   }
 
   grouping yang-push-module-version-config {
     description
       "This grouping combines the module name, the revision and
-      revision-label leaves. This grouping is to be used for
+      version leaves. This grouping is to be used for
       configuration and the leaves are not mandatory.";
-    leaf module-name {
+    leaf name {
       type yang:yang-identifier;
       description
         "This references the YANG module name.";
@@ -138,22 +145,22 @@ module ietf-yang-push-revision {
         "This references the YANG module revision to be sent in the
         subscription.";
     }
-    leaf revision-label {
+    leaf version {
       type ysver:version;
       description
-        "This references the YANG module semantic version to be sent in
-        the subscription.";
+        "This references the YANG module semantic version to be sent
+        in the subscription.";
     }
   }
 
   grouping yang-push-module-version {
     description
       "This grouping combines the module name, the revision and
-      revision-label leaves. This grouping is to be used for
+      version leaves. This grouping is to be used for
       read-only cases such as the content of YANG-Push Notifications.
-      The module-name and revision are mandatory and MUST be present
+      The name and revision are mandatory and MUST be present
       in the data.";
-    leaf module-name {
+    leaf name {
       type yang:yang-identifier;
       config false;
       mandatory true;
@@ -168,11 +175,11 @@ module ietf-yang-push-revision {
         "This references the YANG module revision of the sent
         notification message.";
     }
-    leaf revision-label {
+    leaf version {
       type ysver:version;
       description
-        "This references the YANG module semantic version of the sent
-        notification message.";
+        "This references the YANG module semantic version of the
+        sent notification message.";
     }
   }
 
@@ -181,7 +188,7 @@ module ietf-yang-push-revision {
       "This grouping defines a list of yang-push-module-version
       grouping.";
     list module-version {
-      key "module-name";
+      key "name";
       config false;
       description
         "List of yang-push-module-version grouping. The revision is
@@ -189,10 +196,10 @@ module ietf-yang-push-revision {
       uses ypr:yang-push-module-version;
     }
     leaf yang-library-content-id {
-    config false;
       type leafref {
         path "/yanglib:yang-library/yanglib:content-id";
       }
+      config false;
       description
         "Contains the YANG library content identifier RFC 8525
         information.";
@@ -204,10 +211,10 @@ module ietf-yang-push-revision {
       "This grouping defines a list of yang-push-module-version-config
       grouping.";
     list module-version-config {
-      key "module-name";
+      key "name";
       description
-        "List of yang-push-module-version-config grouping. The revision
-        is configurable.";
+        "List of yang-push-module-version-config grouping. The
+        revision is configurable.";
       uses ypr:yang-push-module-version-config;
     }
   }
@@ -266,8 +273,8 @@ module ietf-yang-push-revision {
       type boolean;
       description
         "Specifies whether the publisher supports exporting
-        revision and revision-label in YANG-Push subscription state
-        change notifications.";
+        revision and version in YANG-Push subscription state change
+        notifications.";
       reference
         "RFC XXXX: Support of Versioning in YANG Notifications
         Subscription";
