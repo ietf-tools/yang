@@ -5,7 +5,6 @@ module iana-igp-metric-types {
 
   organization
     "Internet Assigned Numbers Authority (IANA)";
-
   contact
     "Internet Assigned Numbers Authority
 
@@ -16,7 +15,6 @@ module iana-igp-metric-types {
 
      Tel:    +1 310 301 5800
       <mailto:iana@iana.org>";
-
   description
     "The YANG module defines the identities for Interior Gateway
      Protocol (IGP) Metric-Types.
@@ -34,6 +32,10 @@ module iana-igp-metric-types {
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
 
+     All revisions of IETF and IANA published modules can be found
+     at the YANG Parameters registry group
+     (https://www.iana.org/assignments/yang-parameters).
+
      This initial version of this YANG module is part of RFC XXXX
      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
      for full legal notices.
@@ -41,16 +43,15 @@ module iana-igp-metric-types {
      //RFC Ed.: replace XXXX with actual RFC number and remove
        this note
 
-     //RFC Ed.: replace IANA_FOO_URL and remove this note.
-
      The latest version of this YANG module is available at
-     <IANA_FOO_URL>.";
+     https://www.iana.org/assignments/yang-parameters.";
 
-  revision 2025-06-13 {
+  revision 2025-09-05 {
     description
       "Initial Version";
     reference
-      "RFC XXXX: YANG Data Model for OSPF Flexible Algorithm";
+      "RFC XXXX: YANG Data Model for OSPF Application-Specific
+                 Link Attributes and Flexible Algorithm";
   }
 
   identity metric-type {
@@ -62,26 +63,35 @@ module iana-igp-metric-types {
   identity igp-metric {
     base metric-type;
     description
-      "IGP Metric.";  
+      "IGP Metric.";
+    reference
+      "RFC9350: IGP Flexible Algorithm";
   }
+
   identity min-unidirectional-link-delay {
     base metric-type;
     description
-      "Min Unidirectional Link Delay as defined in RFC8570 Section 4.2
-       and RFC7471 Section 4.2.";
+      "Min Unidirectional Link Delay as defined in RFC8570
+       Section 4.2 and RFC7471 Section 4.2.";
+    reference
+      "RFC9350: IGP Flexible Algorithm";
   }
 
   identity te-default-metric {
     base metric-type;
     description
-      "STraffic Engineering Default Metric as defined in RFC5305
-       Section 3.7 and Traffic Engineering Metric as defined in 
+      "Traffic Engineering Default Metric as defined in RFC5305
+       Section 3.7 and Traffic Engineering Metric as defined in
        RFC3630, Section 2.5.5.";
+    reference
+      "RFC9350: IGP Flexible Algorithm";
   }
 
   identity bandwidth-metric {
     base metric-type;
     description
       "Bandwidth metric.";
+    reference
+      "draft-ietf-lsr-flex-algo-bw-con";
   }
 }
