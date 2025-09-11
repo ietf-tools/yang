@@ -66,7 +66,8 @@ module ietf-bfd-opt-auth {
 
   description
     "This YANG module augments the base BFD YANG model to add
-     attributes related to BFD Optimized Authentication.
+     attributes related to the experimental BFD Optimized
+     Authentication.
 
      Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
@@ -87,8 +88,7 @@ module ietf-bfd-opt-auth {
      'MAY', and 'OPTIONAL' in this document are to be interpreted as
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
      they appear in all capitals, as shown here.";
-
-  revision "2025-09-04" {
+  revision "2025-09-10" {
     description
       "Initial Version.";
     reference
@@ -140,6 +140,7 @@ module ietf-bfd-opt-auth {
           "bfd-ip-mh:session-groups/bfd-ip-mh:session-group/" +
           "bfd-ip-mh:authentication" {
     uses bfd-opt-auth-config;
+
     description
       "Augment the 'authentication' container for multi-hop BFD
        module to add attributes related to BFD optimized
