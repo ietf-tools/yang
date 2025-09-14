@@ -9,27 +9,22 @@ module ietf-isis-flex-algo {
       "RFC 8349: A YANG Data Model for Routing
                  Management (NMDA Version)";
   }
-
   import ietf-te-types {
     prefix te-types;
     reference
       "RFC8776: Common YANG Data Types for Traffic Engineering.";
   }
-
   import ietf-isis {
     prefix isis;
     reference
       "RFC 9130: YANG Data Model for the IS-IS Protocol";
   }
-
   import ietf-te {
     prefix te;
   }
-
   import iana-igp-algo-types {
-     prefix iana-algo-types;
+    prefix iana-algo-types;
   }
-
   import iana-igp-metric-types {
     prefix iana-metric-type;
   }
@@ -38,7 +33,7 @@ module ietf-isis-flex-algo {
     "IETF LSR - Link State Routing Working Group";
   contact
     "WG Web:   <https://datatracker.ietf.org/wg/lsr>
-     WG List:  <mailto:spring@ietf.org>
+     WG List:  <mailto:lsr@ietf.org>
 
      Author:    Yingzhen Qu
                <mailto:yingzhen.ietf@gmail.com>
@@ -49,7 +44,6 @@ module ietf-isis-flex-algo {
      Author:    Madhavi Joshi
                <madhavi@arrcus.com>
     ";
-
   description
     "The YANG module defines the configuration and operational
      state for ISIS Flexible Algorithm as defined in RFC 9350.
@@ -76,14 +70,12 @@ module ietf-isis-flex-algo {
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
      they appear in all capitals, as shown here.";
 
-  reference
-    "RFC XXXX: YANG Data Model for ISIS Flexible Algorithm.";
-
-  revision 2025-07-06 {
+  revision 2025-09-11 {
     description
       "Initial Version";
     reference
-       "RFC XXXX: YANG Data Model for ISIS Flexible Algorithm.";
+      "RFC XXXX: YANG Data Model for IS-IS Application-Specific
+                 Link Attributes and Flexible Algorithm";
   }
 
   /* Identities */
@@ -102,6 +94,7 @@ module ietf-isis-flex-algo {
   }
 
   /* Groupings */
+
   grouping fa-ex-ag-sub-tlv {
     container fa-ex-ag-sub-tlv {
       leaf-list extended-admin-groups {
@@ -186,8 +179,8 @@ module ietf-isis-flex-algo {
           type identityref {
             base iana-metric-type:metric-type;
           }
-            description
-              "Type of metric to be used during the calculation.";
+          description
+            "Type of metric to be used during the calculation.";
         }
         leaf calc-type {
           type identityref {
@@ -195,22 +188,20 @@ module ietf-isis-flex-algo {
           }
           description
             "IGP algorithm types, value from 0 to 127 as
-            defined under 'Interior Gateway Protocol (IGP)
-            Parameter' by IANA.";
+             defined under 'Interior Gateway Protocol (IGP)
+             Parameter' by IANA.";
         }
         leaf priority {
           type uint8;
-            description
-              "Priority of the advertisement.";
+          description
+            "Priority of the advertisement.";
         }
-
         uses fa-ex-ag-sub-tlv;
         uses fa-in-any-ag-sub-tlv;
         uses fa-in-all-ag-sub-tlv;
         uses fad-flags-sub-tlv;
         uses fa-ex-srlg-sub-tlv;
         uses isis:unknown-tlvs;
-
         description
           "List of flex-algo definition TLVs.";
       }
@@ -247,38 +238,34 @@ module ietf-isis-flex-algo {
 
   /* Configurations */
 
-  augment "/rt:routing/" +
-          "rt:control-plane-protocols/rt:control-plane-protocol"+
-          "/isis:isis" {
-    when "/rt:routing/rt:control-plane-protocols/"+
-                 "rt:control-plane-protocol/rt:type = 'isis:isis'" {
+  augment "/rt:routing/"
+        + "rt:control-plane-protocols/rt:control-plane-protocol"
+        + "/isis:isis" {
+    when "/rt:routing/rt:control-plane-protocols/"
+       + "rt:control-plane-protocol/rt:type = 'isis:isis'" {
       description
         "This augment ISIS routing protocol when used";
     }
     description
       "This augments ISIS protocol configuration
        with flexible algorithm.";
-
     container isis-flex-algo {
       list flex-algo {
         key "algo-number";
-
         leaf algo-number {
           type uint8 {
             range "128..255";
           }
           description
             "An identifier in the range 128-255 that's associated
-            with the Flexible Algorithm Definition.";
+             with the Flexible Algorithm Definition.";
         }
-
         leaf advertise-definition {
           type boolean;
-          default true;
+          default "true";
           description
             "Enable to advertise the flex-algo definition.";
         }
-
         container admin-groups {
           if-feature "te-types:extended-admin-groups";
           if-feature "te-types:named-extended-admin-groups";
@@ -289,7 +276,7 @@ module ietf-isis-flex-algo {
             }
             description
               "Exclude rule used during the flex-algo
-              path computation.";
+               path computation.";
           }
           leaf-list include-any-admin-groups {
             type leafref {
@@ -298,7 +285,7 @@ module ietf-isis-flex-algo {
             }
             description
               "Include-any rule used during the flex-algo
-              path computation.";
+               path computation.";
           }
           leaf-list include-all-admin-groups {
             type leafref {
@@ -307,12 +294,11 @@ module ietf-isis-flex-algo {
             }
             description
               "Include-all rule used during the flex-algo
-              path computation.";
+               path computation.";
           }
           description
             "Specify links for the flex-algo path computation.";
         }
-
         leaf-list exclude-srlgs {
           if-feature "te-types:named-srlg-groups";
           type leafref {
@@ -321,9 +307,8 @@ module ietf-isis-flex-algo {
           }
           description
             "Shared Risk Link Groups (SRLGs) to be excluded during
-            the flex-algo path computation.";
+             the flex-algo path computation.";
         }
-
         leaf metric-type {
           type identityref {
             base iana-metric-type:metric-type;
@@ -331,31 +316,26 @@ module ietf-isis-flex-algo {
           description
             "Type of metric to be used during the calculation.";
         }
-
         leaf calc-type {
           type identityref {
             base iana-algo-types:algo-type;
           }
-          default iana-algo-types:algo-spf;
+          default "iana-algo-types:algo-spf";
           description
-            "Calcuation-type. Value from 0-127 inclusive from the IANA 
-             'IGP Algorithm Types' registry defined under the 'Interior
-             Gateway Protocol (IGP) Parameters' registry.";
+            "Calcuation-type. Value from 0-127 inclusive from the
+             IANA 'IGP Algorithm Types' registry defined under the
+             'Interior Gateway Protocol (IGP) Parameters' registry.";
         }
-
         container prefix-metric {
-          presence
-            "Use flex-algo specific prefix metric.";
+          presence "Use flex-algo specific prefix metric.";
           description
             "Use flex-algo prefix metric.";
         }
-
         leaf priority {
           type uint8;
           description
             "Priority of the advertisement.";
         }
-
         description
           "List of flex-algo configurations.";
       }
@@ -366,81 +346,80 @@ module ietf-isis-flex-algo {
 
   /* Database */
 
-  augment "/rt:routing/" +
-          "rt:control-plane-protocols/rt:control-plane-protocol"+
-          "/isis:isis/isis:database/isis:levels/isis:lsp"+
-          "/isis:router-capabilities" {
-    when "/rt:routing/rt:control-plane-protocols/"+
-         "rt:control-plane-protocol/"+
-         "rt:type = 'isis:isis'" {
-    description
-      "This augment ISIS routing protocol when used";
+  augment "/rt:routing/"
+        + "rt:control-plane-protocols/rt:control-plane-protocol"
+        + "/isis:isis/isis:database/isis:levels/isis:lsp"
+        + "/isis:router-capabilities" {
+    when "/rt:routing/rt:control-plane-protocols/"
+       + "rt:control-plane-protocol/"
+       + "rt:type = 'isis:isis'" {
+      description
+        "This augment ISIS routing protocol when used";
     }
     description
       "This augments ISIS protocol LSDB router capability.";
-
     uses fad-tlvs;
   }
 
-  augment "/rt:routing/" +
-          "rt:control-plane-protocols/rt:control-plane-protocol"+
-          "/isis:isis/isis:database/isis:levels/isis:lsp"+
-          "/isis:extended-ipv4-reachability/"+
-          "isis:prefixes" {
-    when "/rt:routing/rt:control-plane-protocols/"+
-         "rt:control-plane-protocol/"+
-         "rt:type = 'isis:isis'" {
+  augment "/rt:routing/"
+        + "rt:control-plane-protocols/rt:control-plane-protocol"
+        + "/isis:isis/isis:database/isis:levels/isis:lsp"
+        + "/isis:extended-ipv4-reachability/"
+        + "isis:prefixes" {
+    when "/rt:routing/rt:control-plane-protocols/"
+       + "rt:control-plane-protocol/"
+       + "rt:type = 'isis:isis'" {
       description
         "This augment ISIS routing protocol when used";
     }
-      description
-        "This augments ISIS protocol LSDB prefix.";
-         uses fapm-sub-tlvs;
+    description
+      "This augments ISIS protocol LSDB prefix.";
+    uses fapm-sub-tlvs;
   }
 
-  augment "/rt:routing/" +
-          "rt:control-plane-protocols/rt:control-plane-protocol"+
-          "/isis:isis/isis:database/isis:levels/isis:lsp"+
-          "/isis:mt-extended-ipv4-reachability/isis:prefixes" {
-    when "/rt:routing/rt:control-plane-protocols/"+
-         "rt:control-plane-protocol/"+
-         "rt:type = 'isis:isis'" {
+  augment "/rt:routing/"
+        + "rt:control-plane-protocols/rt:control-plane-protocol"
+        + "/isis:isis/isis:database/isis:levels/isis:lsp"
+        + "/isis:mt-extended-ipv4-reachability/isis:prefixes" {
+    when "/rt:routing/rt:control-plane-protocols/"
+       + "rt:control-plane-protocol/"
+       + "rt:type = 'isis:isis'" {
       description
         "This augment ISIS routing protocol when used";
     }
-      description
-        "This augments ISIS protocol LSDB prefix.";
-         uses fapm-sub-tlvs;
+    description
+      "This augments ISIS protocol LSDB prefix.";
+    uses fapm-sub-tlvs;
   }
 
-  augment "/rt:routing/" +
-          "rt:control-plane-protocols/rt:control-plane-protocol"+
-          "/isis:isis/isis:database/isis:levels/isis:lsp"+
-                      "/isis:ipv6-reachability/isis:prefixes" {
-    when "/rt:routing/rt:control-plane-protocols/"+
-         "rt:control-plane-protocol/"+
-         "rt:type = 'isis:isis'" {
+  augment "/rt:routing/"
+        + "rt:control-plane-protocols/rt:control-plane-protocol"
+        + "/isis:isis/isis:database/isis:levels/isis:lsp"
+        + "/isis:ipv6-reachability/isis:prefixes" {
+    when "/rt:routing/rt:control-plane-protocols/"
+       + "rt:control-plane-protocol/"
+       + "rt:type = 'isis:isis'" {
       description
         "This augment ISIS routing protocol when used";
     }
-      description
-        "This augments ISIS protocol LSDB prefix.";
-         uses fapm-sub-tlvs;
+    description
+      "This augments ISIS protocol LSDB prefix.";
+    uses fapm-sub-tlvs;
   }
 
-  augment "/rt:routing/" +
-          "rt:control-plane-protocols/rt:control-plane-protocol"+
-          "/isis:isis/isis:database/isis:levels/isis:lsp"+
-                      "/isis:mt-ipv6-reachability/isis:prefixes" {
-    when "/rt:routing/rt:control-plane-protocols/"+
-         "rt:control-plane-protocol/"+
-         "rt:type = 'isis:isis'" {
+  augment "/rt:routing/"
+        + "rt:control-plane-protocols/rt:control-plane-protocol"
+        + "/isis:isis/isis:database/isis:levels/isis:lsp"
+        + "/isis:mt-ipv6-reachability/isis:prefixes" {
+    when "/rt:routing/rt:control-plane-protocols/"
+       + "rt:control-plane-protocol/"
+       + "rt:type = 'isis:isis'" {
       description
         "This augment ISIS routing protocol when used";
     }
-      description
-        "This augments ISIS protocol LSDB prefix.";
-         uses fapm-sub-tlvs;
+    description
+      "This augments ISIS protocol LSDB prefix.";
+    uses fapm-sub-tlvs;
   }
 
   /* notification */
