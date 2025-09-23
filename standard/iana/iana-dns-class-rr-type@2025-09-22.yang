@@ -42,6 +42,14 @@ module iana-dns-class-rr-type {
     "IANA 'Domain Name System (DNS) Parameters' registry
      https://www.iana.org/assignments/dns-parameters";
 
+   revision 2025-09-22 {
+     description 
+       "Replaced draft string reference to 128 NXNAME with RFC 9824.";
+     reference
+       "RFC 9824"
+     + "iana-dns-class-rr-type@2025-09-22.yang";
+  }
+
    revision 2025-05-20 {
      description "Registered RR Types HHIT 67 and BRID 68.";
      reference
@@ -736,7 +744,7 @@ Plan - Name Service, April 1987.";
         description
           "NXDOMAIN indicator for Compact Denial of Existence";
         reference
-          "draft-ietf-dnsop-compact-denial-of-existence-04";
+          "RFC 9824";
       }
       enum TKEY {
         value 249;
