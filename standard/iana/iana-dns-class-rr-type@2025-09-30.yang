@@ -42,6 +42,14 @@ module iana-dns-class-rr-type {
     "IANA 'Domain Name System (DNS) Parameters' registry
      https://www.iana.org/assignments/dns-parameters";
 
+   revision 2025-09-30 {
+     description 
+       "Replaced draft string reference to 66 DSYNC with RFC 9859.";
+     reference
+       "RFC 9859"
+     + "iana-dns-class-rr-type@2025-09-22.yang";
+  }
+
    revision 2025-09-22 {
      description 
        "Replaced draft string reference to 128 NXNAME with RFC 9824.";
@@ -660,7 +668,7 @@ Plan - Name Service, April 1987.";
         description
           "Endpoint discovery for delegation synchronization";
         reference
-          "draft-ietf-dnsop-generalized-notify-03";
+          "RFC 9859";
       }
       enum SPF {
         value 99;
