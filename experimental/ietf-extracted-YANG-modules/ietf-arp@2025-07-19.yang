@@ -61,8 +61,7 @@ module ietf-arp {
     description
       "Init revision";
     reference
-      "RFC XXXX: A Yang Data Model for Address
-       Resolution Protocol (ARP)";
+      "RFC XXXX: A Yang Data Model for ARP";
   }
 
   container arp {
