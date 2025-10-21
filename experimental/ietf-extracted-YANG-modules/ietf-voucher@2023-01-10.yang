@@ -84,13 +84,26 @@ module ietf-voucher {
            this node.";
       }
       leaf-list extensions {
-        type string {
-          length "1..40";
+        type union {
+          type uint64; // when serialized to CBOR with SID
+          type string; // when serialized to CBOR or JSON
         }
         description
           "A list of extension names that are used in this Voucher
-           file.  Each name is registered with the IANA and
-           described in an RFC.";
+           file.  Each name is registered with the IANA.  Standard
+           extensions are described in an RFC, while vendor \
+                                                          proprietary
+           ones are not.";
+      }
+      leaf manufacturer-private {
+        type binary;
+        description
+          "In CBOR serialization, this is a CBOR bstr containing \
+                                                  any valid CBOR that
+           the manufacturer wishes to share with it's Pledge.  In \
+                                                 JSON serializations,
+           this contains additional JSON instead, and it is \
+                                                 base64URL encoded.";
       }
       leaf assertion {
         type enumeration {
@@ -238,7 +251,8 @@ module ietf-voucher {
       }
       leaf last-renewal-date {
         type yang:date-and-time;
-        must '../expires-on';
+        // this does not work, the XPath does not evaluate
+        // must '../nonceless/expires-on';
         description
           "The date that the MASA projects to be the last date it
            will renew a voucher on. This field is merely
@@ -250,63 +264,68 @@ module ietf-voucher {
            contracts, which may be terminated or extended
            over time.";
       }
-    }
-    choice nonceless {
-      description
-        "Either a nonce must be present, or an expires-on header";
-      leaf expires-on {
-        type yang:date-and-time;
+      choice nonceless {
         description
-          "A value indicating when this voucher expires.  The node is
-           optional as not all pledges support expirations, such as
-           pledges lacking a reliable clock.
+          "Either a nonce must be present, or an expires-on header";
+        leaf expires-on {
+          type yang:date-and-time;
+          description
+            "A value indicating when this voucher expires.  The \
+                                                              node is
+             optional as not all pledges support expirations, such as
+             pledges lacking a reliable clock.
 
-           If this field exists, then the pledges MUST ensure that
-           the expires-on time has not yet passed. A pledge without
-           an accurate clock cannot meet this requirement.
+             If this field exists, then the pledges MUST ensure that
+             the expires-on time has not yet passed. A pledge without
+             an accurate clock cannot meet this requirement.
 
-           The expires-on value MUST NOT exceed the expiration date
-           of any of the listed 'pinned-domain-cert' certificates.";
-      }
-      leaf nonce {
-        type binary {
-          length "8..32";
+             The expires-on value MUST NOT exceed the expiration date
+             of any of the listed 'pinned-domain-cert' certificates.\
+                                                                   ";
         }
-        description
-          "A value that can be used by a pledge in some bootstrapping
-           protocols to enable anti-replay protection.  This node is
-           optional because it is not used by all bootstrapping
-           protocols.
+        leaf nonce {
+          type binary {
+            length "8..32";
+          }
+          description
+            "A value that can be used by a pledge in some \
+                                                        bootstrapping
+             protocols to enable anti-replay protection.  This node \
+                                                                   is
+             optional because it is not used by all bootstrapping
+             protocols.
 
-           When present, the pledge MUST compare the provided nonce
-           value with another value that the pledge randomly
-           generated and sent to a bootstrap server in an earlier
-           bootstrapping message.  If the value is present, but
-           the values do not match, then the pledge MUST NOT process
-           this voucher.";
+             When present, the pledge MUST compare the provided nonce
+             value with another value that the pledge randomly
+             generated and sent to a bootstrap server in an earlier
+             bootstrapping message.  If the value is present, but
+             the values do not match, then the pledge MUST NOT \
+                                                              process
+             this voucher.";
+        }
       }
-    }
-    leaf est-domain {
-      type ietf:uri;
-      description
-        "The est-domain is a URL from which the Pledge should
-           continue doing enrollment rather than with the
-           Cloud Registrar.
-           The pinned-domain-cert contains a trust-anchor
-           which is to be used to authenticate the server
-           found at this URI.
-          ";
-    }
-    leaf additional-configuration-url {
-      type ietf:uri;
-      description
-        "The additional-configuration attribute contains a
-           URL to which the Pledge can retrieve additional
-           configuration information.
-           The contents of this URL are manufacturer specific.
-           This is intended to do things like configure
-           a VoIP phone to point to the correct hosted
-           PBX, for example.";
+      leaf est-domain {
+        type ietf:uri;
+        description
+          "The est-domain is a URL from which the Pledge should
+             continue doing enrollment rather than with the
+             Cloud Registrar.
+             The pinned-domain-cert contains a trust-anchor
+             which is to be used to authenticate the server
+             found at this URI.
+            ";
+      }
+      leaf additional-configuration-url {
+        type ietf:uri;
+        description
+          "The additional-configuration attribute contains a
+             URL to which the Pledge can retrieve additional
+             configuration information.
+             The contents of this URL are manufacturer specific.
+             This is intended to do things like configure
+             a VoIP phone to point to the correct hosted
+             PBX, for example.";
+      }
     }
   }
 

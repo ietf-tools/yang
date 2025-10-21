@@ -58,8 +58,7 @@ module ietf-petra {
     {
       'output': {
         'success': {
-          'watts-per-gigabit': '191.855',
-          'carbon-intensity': '108'
+          'watts-per-gigabit': '191.855'
         }
       }
     }
@@ -82,12 +81,6 @@ module ietf-petra {
       units W/Gb;
       description
         "Watts consumed per Gigabit transmitted";
-    }
-    leaf carbon-intensity {
-      type uint32;
-      units gCO2e/kWh;
-      description
-        "Grams of CO2 per kWh";
     }
   }
 
