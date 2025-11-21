@@ -38,6 +38,17 @@ module iana-bfd-types {
     "RFC 9127: YANG Data Model for Bidirectional Forwarding
      Detection (BFD)";
 
+  revision 2025-11-20 {
+    description
+      "Added Authentication Types 6-8.";
+    reference
+      "https://www.iana.org/assignments/yang-parameters/"
+    + "iana-bfd-types@2025-11-20.yang
+       draft-ietf-bfd-stability-21: BFD Stability
+       draft-ietf-bfd-secure-sequence-numbers-27: Meticulous Keyed 
+       ISAAC for BFD Optimized Authentication";
+  }
+
   revision 2021-10-21 {
     description
       "Initial revision.";
@@ -147,6 +158,27 @@ module iana-bfd-types {
         value 5;
         description
           "Meticulous Keyed SHA1.";
+      }
+      enum null {
+        value 6;
+        description
+          "NULL.";
+        reference
+          "draft-ietf-bfd-stability-21: BFD Stability";
+      }
+      enum optimized-md5-meticulous-keyed-isaac-authentication {
+        value 7;
+        description
+          "Optimized MD5 Meticulous Keyed ISAAC Authentication.";
+        reference
+          "draft-ietf-bfd-secure-sequence-numbers-27";
+      }
+      enum optimized-sha1-meticulous-keyed-isaac-authentication {
+        value 8;
+        description
+          "Optimized MD5 Meticulous Keyed ISAAC Authentication.";
+        reference
+          "draft-ietf-bfd-secure-sequence-numbers-27";
       }
     }
     description
