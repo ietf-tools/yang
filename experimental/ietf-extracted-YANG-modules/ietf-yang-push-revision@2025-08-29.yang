@@ -95,8 +95,8 @@ module ietf-yang-push-revision {
   feature yang-push-revision-supported {
     description
       "This feature indicates the YANG Subscription Notifications
-      supports specifying the list of modules, revisions and
-      version in the YANG subscription.";
+      support specifying the list of modules, revisions and
+      versions in the YANG subscription.";
   }
 
   // Identities
@@ -122,11 +122,10 @@ module ietf-yang-push-revision {
     base sn:establish-subscription-error;
     base sn:modify-subscription-error;
     description
-      "The combination of revision and the version are
+      "The combination of revision and version are
       incompatible. This failure happens when the revision and the
       version are both specified in the RPC and the YANG
-      module supported by the publisher does not support one of the
-      revision or the version.";
+      module supported by the publisher does not support one of them.";
   }
 
   grouping yang-push-module-version-config {
