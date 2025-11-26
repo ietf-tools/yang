@@ -79,9 +79,6 @@ module ietf-voucher-request {
     description
       "Grouping to allow reuse/extensions in future work.";
     uses vch:voucher-artifact-grouping {
-      refine "voucher/created-on" {
-        mandatory false;
-      }
       refine "voucher/last-renewal-date" {
         description
           "A last-renewal-date field
@@ -95,7 +92,6 @@ module ietf-voucher-request {
            any occurrence MUST be ignored";
       }
       refine "voucher/assertion" {
-        mandatory false;
         description
           "Any assertion included in registrar voucher
            requests SHOULD be ignored by the MASA.";
@@ -107,7 +103,8 @@ module ietf-voucher-request {
           type binary;
           description
             "If it is necessary to change a voucher, or re-sign and
-             forward a voucher that was previously provided along a
+             forward a voucher request that was previously provided \
+                                                              along a
              protocol path, then the previously signed voucher SHOULD
              be included in this field.
 
@@ -120,68 +117,66 @@ module ietf-voucher-request {
 
              The Registrar and MASA MAY examine the prior signed
              voucher information for the
-             purposes of policy decisions. For example this
-             information could be useful to a MASA to determine
-             that both pledge and registrar agree on proximity
-             assertions. The MASA SHOULD remove all
+             purposes of policy decisions. The MASA SHOULD remove all
              prior-signed-voucher-request information when
              signing a voucher for imprinting so as to minimize
              the final voucher size.";
         }
-        choice registrar-identity {
+        // choice registrar-identity {
+        //  description "One of these attributes will be used by a
+        //               Pledge to specify the proximity to, and the
+        //               identity of, a Registrar it is \
+                                                communicating with.";
+        leaf proximity-registrar-cert {
+          type binary;
           description
-            "One of these three attributes will be used to pin the \
-                                                 registrar identity";
-          leaf proximity-registrar-cert {
-            type binary;
-            description
-              "An X.509 v3 certificate structure as specified by
-               RFC 5280, Section 4 encoded using the ASN.1
-               distinguished encoding rules (DER), as specified
-               in [ITU.X690.1994].
+            "An X.509 v3 certificate structure as specified by
+             RFC 5280, Section 4 encoded using the ASN.1
+             distinguished encoding rules (DER), as specified
+             in [ITU.X690.1994].
 
-               The first certificate in the Registrar TLS server
-               certificate_list sequence  (the end-entity TLS
-               certificate, see [RFC8446]) presented by the Registrar
-               to the Pledge.
-               This MUST be populated in a Pledge's voucher request
-               when a proximity assertion is requested.";
-          }
-          leaf proximity-registrar-pubk {
-            type binary;
-            description
-              "The proximity-registrar-pubk replaces
-               the proximity-registrar-cert in constrained uses of
-               the voucher-request.
-               The proximity-registrar-pubk is the
-               Raw Public Key of the Registrar. This field is encoded
-               as specified in RFC7250, section 3.
-               The ECDSA algorithm MUST be supported.
-               The EdDSA algorithm as specified in
-               draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
-               Support for the DSA algorithm is not recommended.
-               Support for the RSA algorithm is a MAY, but due to
-               size is discouraged.";
-          }
-          leaf proximity-registrar-pubk-sha256 {
-            type binary;
-            description
-              "The proximity-registrar-pubk-sha256
-               is an alternative to both
-               proximity-registrar-pubk and pinned-domain-cert.
-               In many cases the public key of the domain has already
-               been transmitted during the key agreement protocol,
-               and it is wasteful to transmit the public key another
-               two times.
-               The use of a hash of public key info, at 32-bytes for
-               sha256 is a significant savings compared to an RSA
-               public key, but is only a minor savings compared to
-               a 256-bit ECDSA public-key.
-               Algorithm agility is provided by extensions to this
-               specification which may define a new leaf for another
-               hash type.";
-          }
+             The first certificate in the Registrar TLS server
+             certificate_list sequence  (the end-entity TLS
+             certificate, see [RFC8446]) presented by the Registrar
+             to the Pledge.
+             This MUST be populated in a Pledge's voucher request
+             when a proximity assertion is requested.";
         }
+        leaf proximity-registrar-pubk {
+          type binary;
+          description
+            "The proximity-registrar-pubk replaces
+             the proximity-registrar-cert in constrained uses of
+             the voucher-request.
+             The proximity-registrar-pubk is the
+             Raw Public Key of the Registrar. This field is encoded
+             as specified in RFC7250, section 3.
+             The ECDSA algorithm MUST be supported.
+             The EdDSA algorithm as specified in
+             draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
+             Support for the DSA algorithm is not recommended.
+             Support for the RSA algorithm is a MAY, but due to
+             size is discouraged.";
+        }
+        leaf proximity-registrar-pubk-sha256 {
+          type binary;
+          description
+            "The proximity-registrar-pubk-sha256
+             is an alternative to both
+             proximity-registrar-pubk and pinned-domain-cert.
+             In many cases the public key of the domain has already
+             been transmitted during the key agreement protocol,
+             and it is wasteful to transmit the public key another
+             two times.
+             The use of a hash of public key info, at 32-bytes for
+             sha256 is a significant savings compared to an RSA
+             public key, but is only a minor savings compared to
+             a 256-bit ECDSA public-key.
+             Algorithm agility is provided by extensions to this
+             specification which may define a new leaf for another
+             hash type.";
+        }
+        // }  choice registrar identity
         leaf agent-signed-data {
           type binary;
           description

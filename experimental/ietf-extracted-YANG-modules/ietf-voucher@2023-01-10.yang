@@ -74,7 +74,7 @@ module ietf-voucher {
     container voucher {
       description
         "A voucher assigns a pledge to an owner using
-         the (pinned-domain-cert) value.";
+         one of the (pinned-domain-*) value.";
       leaf created-on {
         type yang:date-and-time;
         description
@@ -178,68 +178,65 @@ module ietf-voucher {
            field is populated for serial-numbers that are not
            otherwise unique within the scope of the MASA.";
       }
-      choice pinning {
+      // choice pinning {
+      //  description "One of these attributes is used by the
+      //               MASA to pin the registrar identity";
+      leaf pinned-domain-cert {
+        type binary;
         description
-          "One of these attributes is used by the pledge to
-           specify the registrar, and how the pledge would like
-           the registrar's identity to be pinned";
-        leaf pinned-domain-cert {
-          type binary;
-          description
-            "An X.509 v3 certificate structure, as specified by
-             RFC 5280, using Distinguished Encoding Rules (DER)
-             encoding, as defined in ITU-T X.690.
+          "An X.509 v3 certificate structure, as specified by
+           RFC 5280, using Distinguished Encoding Rules (DER)
+           encoding, as defined in ITU-T X.690.
 
-             This certificate is used by a pledge to trust a Public \
-                                                                  Key
-             Infrastructure in order to verify a domain certificate
-             supplied to the pledge separately by the bootstrapping
-             protocol.  The domain certificate MUST have this
-             certificate somewhere in its chain of certificates.
-             This certificate MAY be an end-entity certificate,
-             including a self-signed entity.";
-          reference
-            "RFC 5280:
-               Internet X.509 Public Key Infrastructure Certificate
-               and Certificate Revocation List (CRL) Profile.
-             ITU-T X.690:
-                Information technology - ASN.1 encoding rules:
-                Specification of Basic Encoding Rules (BER),
-                Canonical Encoding Rules (CER) and Distinguished
-                Encoding Rules (DER).";
-        }
-        leaf pinned-domain-pubk {
-          type binary;
-          description
-            "The pinned-domain-pubk may replace the
-             pinned-domain-cert in constrained uses of
-             the voucher. The pinned-domain-pubk
-             is the Raw Public Key of the Registrar.
-             This field is encoded as a Subject Public Key Info block
-             as specified in RFC7250, in section 3.
-             The ECDSA algorithm MUST be supported.
-             The EdDSA algorithm as specified in
-             draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
-             Support for the DSA algorithm is not recommended.
-             Support for the RSA algorithm is a MAY.";
-        }
-        leaf pinned-domain-pubk-sha256 {
-          type binary;
-          description
-            "The pinned-domain-pubk-sha256 is a second
-             alternative to pinned-domain-cert.  In many cases the
-             public key of the domain has already been transmitted
-             during the key agreement process, and it is wasteful
-             to transmit the public key another two times.
-             The use of a hash of public key info, at 32-bytes for
-             sha256 is a significant savings compared to an RSA
-             public key, but is only a minor savings compared to
-             a 256-bit ECDSA public-key.
-             Algorithm agility is provided by extensions to this
-             specification which can define a new leaf for another
-             hash type.";
-        }
+           This certificate is used by a pledge to trust a Public Key
+           Infrastructure in order to verify a domain certificate
+           supplied to the pledge separately by the bootstrapping
+           protocol.  The domain certificate MUST have this
+           certificate somewhere in its chain of certificates.
+           This certificate MAY be an end-entity certificate,
+           including a self-signed entity.";
+        reference
+          "RFC 5280:
+             Internet X.509 Public Key Infrastructure Certificate
+             and Certificate Revocation List (CRL) Profile.
+           ITU-T X.690:
+              Information technology - ASN.1 encoding rules:
+              Specification of Basic Encoding Rules (BER),
+              Canonical Encoding Rules (CER) and Distinguished
+              Encoding Rules (DER).";
       }
+      leaf pinned-domain-pubk {
+        type binary;
+        description
+          "The pinned-domain-pubk may replace the
+           pinned-domain-cert in constrained uses of
+           the voucher. The pinned-domain-pubk
+           is the Raw Public Key of the Registrar.
+           This field is encoded as a Subject Public Key Info block
+           as specified in RFC7250, in section 3.
+           The ECDSA algorithm MUST be supported.
+           The EdDSA algorithm as specified in
+           draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
+           Support for the DSA algorithm is not recommended.
+           Support for the RSA algorithm is a MAY.";
+      }
+      leaf pinned-domain-pubk-sha256 {
+        type binary;
+        description
+          "The pinned-domain-pubk-sha256 is a second
+           alternative to pinned-domain-cert.  In many cases the
+           public key of the domain has already been transmitted
+           during the key agreement process, and it is wasteful
+           to transmit the public key another two times.
+           The use of a hash of public key info, at 32-bytes for
+           sha256 is a significant savings compared to an RSA
+           public key, but is only a minor savings compared to
+           a 256-bit ECDSA public-key.
+           Algorithm agility is provided by extensions to this
+           specification which can define a new leaf for another
+           hash type.";
+      }
+      // }  choice pinning removed
       leaf domain-cert-revocation-checks {
         type boolean;
         description
@@ -251,7 +248,8 @@ module ietf-voucher {
       }
       leaf last-renewal-date {
         type yang:date-and-time;
-        must '../expires-on';
+        // this does not work, the XPath does not evaluate
+        // must '../nonceless/expires-on';
         description
           "The date that the MASA projects to be the last date it
            will renew a voucher on. This field is merely
@@ -263,10 +261,9 @@ module ietf-voucher {
            contracts, which may be terminated or extended
            over time.";
       }
-    }
-    choice nonceless {
-      description
-        "Either a nonce must be present, or an expires-on header";
+      //choice nonceless {
+      //  description "Either a nonce must be present, or an expires\
+                                                         -on header";
       leaf expires-on {
         type yang:date-and-time;
         description
@@ -298,28 +295,29 @@ module ietf-voucher {
            the values do not match, then the pledge MUST NOT process
            this voucher.";
       }
-    }
-    leaf est-domain {
-      type ietf:uri;
-      description
-        "The est-domain is a URL from which the Pledge should
-           continue doing enrollment rather than with the
-           Cloud Registrar.
-           The pinned-domain-cert contains a trust-anchor
-           which is to be used to authenticate the server
-           found at this URI.
-          ";
-    }
-    leaf additional-configuration-url {
-      type ietf:uri;
-      description
-        "The additional-configuration attribute contains a
-           URL to which the Pledge can retrieve additional
-           configuration information.
-           The contents of this URL are manufacturer specific.
-           This is intended to do things like configure
-           a VoIP phone to point to the correct hosted
-           PBX, for example.";
+      // } choice nonceless
+      leaf est-domain {
+        type ietf:uri;
+        description
+          "The est-domain is a URL from which the Pledge should
+             continue doing enrollment rather than with the
+             Cloud Registrar.
+             The pinned-domain-cert contains a trust-anchor
+             which is to be used to authenticate the server
+             found at this URI.
+            ";
+      }
+      leaf additional-configuration-url {
+        type ietf:uri;
+        description
+          "The additional-configuration attribute contains a
+             URL to which the Pledge can retrieve additional
+             configuration information.
+             The contents of this URL are manufacturer specific.
+             This is intended to do things like configure
+             a VoIP phone to point to the correct hosted
+             PBX, for example.";
+      }
     }
   }
 
