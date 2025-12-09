@@ -31,15 +31,17 @@ module ietf-voucher {
      Author:   Toerless Eckert
                <mailto:tte@cs.fau.de>
      Author:   Qiufang Ma
-               <mailto:maqiufang1@huawei.com>";
+               <mailto:maqiufang1@huawei.com>
+     Author:   Esko Dijk
+               <mailto:esko.dijk@iotconsultancy.nl>";
   description
-    "This module defines the format for a voucher, which is
+    "This module defines the format for a Voucher, which is
      produced by a pledge's manufacturer or delegate (MASA)
      to securely assign a pledge to an 'owner', so that the
      pledge may establish a secure connection to the owner's
      network infrastructure.
 
-     Copyright (c) 2024 IETF Trust and the persons identified as
+     Copyright (c) 2023 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -53,19 +55,26 @@ module ietf-voucher {
      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
      for full legal notices.
 
-     RFCEDITOR: please replace XXXX with the RFC number assigned.
-
      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
      'MAY', and 'OPTIONAL' in this document are to be interpreted as
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
      they appear in all capitals, as shown here.";
 
+  // RFCEDITOR: please replace XXXX in this entire code fragment
+  // with the RFC number assigned and remove this notice.
+
   revision 2023-01-10 {
     description
-      "updated to support new assertion enumerated type";
+      "Updates and additions described by RFC XXXX";
     reference
-      "RFC XXXX Voucher Profile for Bootstrapping Protocols";
+      "RFC XXXX A Voucher Profile for Bootstrapping Protocols";
+  }
+  revision 2018-05-09 {
+    description
+      "Initial version";
+    reference
+      "RFC 8366: Voucher Profile for Bootstrapping Protocols";
   }
 
   grouping voucher-artifact-grouping {
@@ -93,12 +102,10 @@ module ietf-voucher {
     leaf manufacturer-private {
       type binary;
       description
-        "In CBOR serialization, this is a CBOR bstr containing any \
-                                                      valid CBOR that
-         the manufacturer wishes to share with it's Pledge.  In \
-                                                 JSON serializations,
-         this contains additional JSON instead, and it is base64URL \
-                                                           encoded.";
+        "In CBOR serialization, this is a CBOR bstr containing any
+         valid CBOR that the manufacturer wishes to share with its
+         pledge.  In JSON serializations, this contains additional
+         JSON instead, and it is base64URL encoded.";
     }
     leaf assertion {
       type enumeration {
@@ -192,13 +199,13 @@ module ietf-voucher {
          including a self-signed entity.";
       reference
         "RFC 5280:
-           Internet X.509 Public Key Infrastructure Certificate
-           and Certificate Revocation List (CRL) Profile.
+         Internet X.509 Public Key Infrastructure Certificate
+         and Certificate Revocation List (CRL) Profile.
          ITU-T X.690:
-            Information technology - ASN.1 encoding rules:
-            Specification of Basic Encoding Rules (BER),
-            Canonical Encoding Rules (CER) and Distinguished
-            Encoding Rules (DER).";
+         Information technology - ASN.1 encoding rules:
+         Specification of Basic Encoding Rules (BER),
+         Canonical Encoding Rules (CER) and Distinguished
+         Encoding Rules (DER).";
     }
     leaf pinned-domain-pubk {
       type binary;
@@ -206,7 +213,7 @@ module ietf-voucher {
         "The pinned-domain-pubk may replace the
          pinned-domain-cert in constrained uses of
          the voucher. The pinned-domain-pubk
-         is the Raw Public Key of the Registrar.
+         is the Raw Public Key of the registrar.
          This field is encoded as a Subject Public Key Info block
          as specified in RFC7250, in section 3.
          The ECDSA algorithm MUST be supported.
@@ -243,11 +250,10 @@ module ietf-voucher {
     }
     leaf last-renewal-date {
       type yang:date-and-time;
-      // this does not work, the XPath does not evaluate
-      // must '../nonceless/expires-on';
+      must '../expires-on';
       description
-        "The date that the MASA projects to be the last date it
-         will renew a voucher on. This field is merely
+        "The date that the MASA projects to be the last date
+         it will renew a voucher on. This field is merely
          informative; it is not processed by pledges.
 
          Circumstances may occur after a voucher is generated that
@@ -257,8 +263,8 @@ module ietf-voucher {
          over time.";
     }
     //choice nonceless {
-    //  description "Either a nonce must be present, or an expires-\
-                                                          on header";
+    //  description "Either a nonce must be present,
+    //               or an expires-on header";
     leaf expires-on {
       type yang:date-and-time;
       description
@@ -294,24 +300,23 @@ module ietf-voucher {
     leaf est-domain {
       type ietf:uri;
       description
-        "The est-domain is a URL from which the Pledge should
-           continue doing enrollment rather than with the
-           Cloud Registrar.
-           The pinned-domain-cert contains a trust-anchor
-           which is to be used to authenticate the server
-           found at this URI.
-          ";
+        "The est-domain is a URL from which the pledge should
+         continue doing enrollment rather than with the
+         cloud registrar.
+         The pinned-domain-cert contains a trust-anchor
+         which is to be used to authenticate the server
+         found at this URI.";
     }
     leaf additional-configuration-url {
       type ietf:uri;
       description
         "The additional-configuration attribute contains a
-           URL to which the Pledge can retrieve additional
-           configuration information.
-           The contents of this URL are manufacturer specific.
-           This is intended to do things like configure
-           a VoIP phone to point to the correct hosted
-           PBX, for example.";
+         URL to which the pledge can retrieve additional
+         configuration information.
+         The contents of this URL are manufacturer specific.
+         This is intended to do things like configure
+         a VoIP phone to point to the correct hosted
+         PBX, for example.";
     }
   }
 

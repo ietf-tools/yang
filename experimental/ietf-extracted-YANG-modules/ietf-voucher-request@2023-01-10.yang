@@ -9,13 +9,13 @@ module ietf-voucher-request {
   import ietf-voucher {
     prefix vch;
     description
-      "This module defines the format for a voucher,
-       which is produced by a pledge's manufacturer or
-       delegate (MASA) to securely assign a pledge to
-       an 'owner', so that the pledge may establish a secure
-       connection to the owner's network infrastructure";
+      "This module defines the format for a Voucher,
+       which is produced by a Pledge's manufacturer or
+       delegate (MASA) to securely assign a Pledge to
+       an 'Owner', so that the Pledge may establish a secure
+       connection to the Owner's network infrastructure";
     reference
-      "RFC XXXX: Voucher Artifact for
+      "RFC XXXX: A Voucher Artifact for
        Bootstrapping Protocols";
   }
 
@@ -33,46 +33,51 @@ module ietf-voucher-request {
      Author:   Toerless Eckert
                <mailto:tte@cs.fau.de>
      Author:   Qiufang Ma
-               <mailto:maqiufang1@huawei.com>";
+               <mailto:maqiufang1@huawei.com>
+     Author:   Esko Dijk
+               <mailto:esko.dijk@iotconsultancy.nl>";
   description
-    "This module defines the format for a voucher request.
-     It is a superset of the voucher itself.
+    "This module defines the format for a Voucher Request.
+     It is a superset of the Voucher itself.
      It provides content to the MASA for consideration
-     during a voucher request.
+     during a voucher request procedure and subsequent
+     Voucher creation.
+
+     Copyright (c) 2023 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject to
+     the license terms contained in, the Revised BSD License set
+     forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX
+     (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
+     for full legal notices.
 
      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
      'MAY', and 'OPTIONAL' in this document are to be interpreted as
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
-     they appear in all capitals, as shown here.
+     they appear in all capitals, as shown here.";
 
-      Copyright (c) 2024 IETF Trust and the persons identified as
-      authors of the code.  All rights reserved.
-
-      Redistribution and use in source and binary forms, with or
-      without modification, is permitted pursuant to, and subject to
-      the license terms contained in, the Revised BSD License set
-      forth in Section 4.c of the IETF Trust's Legal Provisions
-      Relating to IETF Documents
-      (https://trustee.ietf.org/license-info).
-
-      This version of this YANG module is part of RFC XXXX
-      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
-      for full legal notices.
-
-     RFCEDITOR: please replace XXXX with the RFC number assigned.
-
-      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
-      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
-      'MAY', and 'OPTIONAL' in this document are to be interpreted as
-      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
-      they appear in all capitals, as shown here.";
+  // RFCEDITOR: please replace XXXX in this entire code fragment
+  // with the RFC number assigned and remove this notice.
 
   revision 2023-01-10 {
     description
+      "Updates and additions described by RFC XXXX";
+    reference
+      "RFC XXXX: A Voucher Artifact for Bootstrapping Protocols";
+  }
+  revision 2021-05-20 {
+    description
       "Initial version";
     reference
-      "RFC XXXX: Bootstrapping Remote Secure Key Infrastructure";
+      "RFC 8995: Bootstrapping Remote Secure Key Infrastructure
+       (BRSKI)";
   }
 
   grouping voucher-request-grouping {
@@ -101,10 +106,9 @@ module ietf-voucher-request {
       type binary;
       description
         "If it is necessary to change a voucher, or re-sign and
-         forward a voucher request that was previously provided \
-                                                              along a
-         protocol path, then the previously signed voucher SHOULD
-         be included in this field.
+         forward a voucher request that was previously provided
+         along a protocol path, then the previously signed
+         voucher SHOULD be included in this field.
 
          For example, a pledge might sign a voucher request
          with a proximity-registrar-cert, and the registrar
@@ -115,8 +119,8 @@ module ietf-voucher-request {
 
          The Registrar and MASA MAY examine the prior signed
          voucher information for the
-         purposes of policy decisions. The MASA SHOULD remove all
-         prior-signed-voucher-request information when
+         purposes of policy decisions. The MASA SHOULD remove
+         all prior-signed-voucher-request information when
          signing a voucher for imprinting so as to minimize
          the final voucher size.";
     }
@@ -172,16 +176,14 @@ module ietf-voucher-request {
     leaf agent-signed-data {
       type binary;
       description
-        "The agent-signed-data field contains a data artifact \
-                                                             provided
-         by the Registrar-Agent to the Pledge for inclusion into the
-         voucher request.
+        "The agent-signed-data field contains a data artifact
+         provided by the Registrar-Agent to the Pledge for
+         inclusion into the voucher request.
 
          This artifact is signed by the Registrar-Agent and contains
          data, which can be verified by the pledge and the registrar.
-         This data contains the pledge's serial-number and a created\
-                                                                  -on
-         information of the agent-signed-data.
+         This data contains the pledge's serial-number and a
+         created-on information of the agent-signed-data.
 
          The format is intentionally defined as binary to allow
          the document using this leaf to determine the encoding.";
@@ -236,8 +238,7 @@ module ietf-voucher-request {
     }
   }
 
-  // Top-level statement
-  // Called "voucher" to match RFC8995
+  // Top-level statement: called "voucher" to match RFC8995
   sx:structure voucher {
     uses voucher-request-grouping;
   }
