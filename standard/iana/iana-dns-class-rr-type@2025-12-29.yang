@@ -42,6 +42,14 @@ module iana-dns-class-rr-type {
     "IANA 'Domain Name System (DNS) Parameters' registry
      https://www.iana.org/assignments/dns-parameters";
 
+   revision 2025-12-29 {
+     description 
+       "Added missing 67 HHIT, 68 BRID registrations.";
+     reference
+       "RFC 9886"
+     + "iana-dns-class-rr-type@2025-12-29.yang";
+  }
+
    revision 2025-09-30 {
      description 
        "Replaced draft string reference to 66 DSYNC with RFC 9859.";
@@ -669,6 +677,20 @@ Plan - Name Service, April 1987.";
           "Endpoint discovery for delegation synchronization";
         reference
           "RFC 9859";
+      }
+      enum HHIT {
+        value 67;
+        description
+          "Hierarchical Host Identity Tag";
+        reference
+          "RFC 9886";
+      }
+      enum BRID {
+        value 68;
+        description
+          "UAS Broadcast Remote Identification";
+        reference
+          "RFC 9886";
       }
       enum SPF {
         value 99;
