@@ -65,8 +65,8 @@ module ietf-yang-library-augmentedby {
         path "../../yanglib:module/yanglib:name";
       }
       description
-        "Leaf-list of the augmentation used by this server to
-         modify the conformance of the module associated with
+        "Leaf-list of the augmentations used by this server to
+         modify the schema tree of the module associated with
          this entry.  Note that the same module can be used for
          augmented-by for multiple modules, so the same
          entry MAY appear within multiple 'module' entries.
@@ -81,45 +81,19 @@ module ietf-yang-library-augmentedby {
   }
 
   augment "/yanglib:yang-library/yanglib:module-set/yanglib:module" {
-    description
-      "Augments the augmented-by leaf-list from module info with the
-       augmented-by grouping.
-
-       The 'augmented-by' leaf-list should only consider those YANG
-       modules that directly augment the YANG module associated
-       with this entry, and the augmenting and augmented modules
-       must be defined in the same module-set.
-
-       The 'directly augment' is identified by the relationship
-       between the augment module and the target node's parent
-       module that it augments to. Only the direct parent module
-       of the target node is augmented, and the rest of the parent
-       modules defined in the schema tree are only indirect
-       dependencies but not augmented modules. (Refer to
-       'Target node' definition in Section 7.17 of RFC7950)
-      ";
+  description
+         "Augments the augmented-by leaf-list from module info with the
+          augmented-by grouping.
+         ";
     uses augmented-by;
   }
 
   augment "/yanglib:modules-state/yanglib:module" {
     status deprecated;
-    description
-      "Augments the augmented-by leaf-list from module info with the
-       augmented-by grouping.
-
-       The 'augmented-by' leaf-list should only consider those YANG
-       modules that directly augment the YANG module associated
-       with this entry, and the augmenting and augmented modules
-       must be defined in the same module-set.
-
-       The 'directly augment' is identified by the relationship
-       between the augment module and the target node's parent
-       module that it augments to. Only the direct parent module
-       of the target node is augmented, and the rest of the parent
-       modules defined in the schema tree are only indirect
-       dependencies but not augmented modules. (Refer to
-       'Target node' definition in Section 7.17 of RFC7950)
-      ";
+        description
+         "Augments the augmented-by leaf-list from module info with the
+          augmented-by grouping.
+         ";
     uses augmented-by;
   }
 }
