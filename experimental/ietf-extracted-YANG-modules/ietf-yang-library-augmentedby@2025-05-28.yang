@@ -21,7 +21,7 @@ module ietf-yang-library-augmentedby {
                Benoit Claise
                <mailto:benoit@everything-ops.net>
                Ignacio Dominguez Martinez-Casanueva
-               <matilto:ignacio.dominguezmartinez@telefonica.com>";
+               <mailto:ignacio.dominguezmartinez@telefonica.com>";
   description
     "This module augments the ietf-yang-library defined in
      [RFC8525] to provide not only the deviation list, but also
@@ -81,19 +81,17 @@ module ietf-yang-library-augmentedby {
   }
 
   augment "/yanglib:yang-library/yanglib:module-set/yanglib:module" {
-  description
-         "Augments the augmented-by leaf-list from module info with the
-          augmented-by grouping.
-         ";
+    description
+      "Augments the augmented-by leaf-list from module info with the
+       augmented-by grouping.";
     uses augmented-by;
   }
 
   augment "/yanglib:modules-state/yanglib:module" {
     status deprecated;
-        description
-         "Augments the augmented-by leaf-list from module info with the
-          augmented-by grouping.
-         ";
+    description
+      "Augments the augmented-by leaf-list from module info with the
+       augmented-by grouping.";
     uses augmented-by;
   }
 }
