@@ -52,21 +52,13 @@ module ietf-yang-library-augmentedby {
      (https://www.iana.org/assignments/yang-parameters).
 
      This version of this YANG module is part of RFC XXXX; see
-     the RFC itself for full legal notices.
+     the RFC itself for full legal notices.";
 
-     // RFC Ed.: replace XXXX/YYYY with actual RFC number and remove
-     // this note
+  // RFC Ed.: replace XXXX/YYYY with actual RFC number and remove
+  // this note
 
-     // replace 'date-revision' with the module publication date
-     // the format is (YYYY-MM-DD)
-
-     This version of this YANG module was generated from the
-     corresponding IANA registry using a <script-info>.
-
-     // RFC Ed.: replace the IANA_FOO_URL and remove this note
-
-     The latest version of this YANG module is available at
-     <IANA_FOO_URL>.";
+  // replace 'date-revision' with the module publication date
+  // the format is (YYYY-MM-DD)
 
   revision 2025-05-28 {
     description
@@ -101,7 +93,6 @@ module ietf-yang-library-augmentedby {
          indirectly) gracefully.";
     }
   }
-
   augment "/yanglib:yang-library/yanglib:module-set/yanglib:module" {
     description
       "Augments the augmented-by leaf-list from module info with the
