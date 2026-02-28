@@ -103,36 +103,39 @@ module ietf-rpki-table {
   augment "/rt:routing" {
     description
       "RPKI tables augmentation of ietf-routing module.";
-    container roa-tables {
+    container vrp-tables {
       config false;
       description
-        "List of tables containing ROAs received from all RPKI
-         cache servers.";
-      list roa-table {
+        "List of tables containing Validated ROA Payloads
+         received from all RPKI cache servers.";
+      list vrp-table {
         key "name";
         description
-          "Table of ROAs received from all RPKI cache servers.";
+          "Table of Validated ROA Payloads received from
+           all RPKI cache servers.";
         leaf name {
           type string;
           description
-            "Name of the ROA table.";
+            "Name of the Validated ROA Payload table.";
         }
         container ipv4 {
           config false;
           description
-            "Container for IPv4 ROAs table.";
-          container roas {
+            "Container for IPv4 Validated ROA Payloads table.";
+          container vrps {
             config false;
             description
-              "ROAs received from the RPKI cache server.";
-            list roa {
+              "Validated ROA Payloads received from the RPKI
+               cache server.";
+            list vrp {
               key "prefix max-len asn source";
               description
-                "An entry of ROA.";
+                "An entry of Validated ROA Payload.";
               leaf prefix {
                 type inet:ipv4-prefix;
                 description
-                  "The IPv4 prefix of the ROA.";
+                  "The IPv4 prefix of the Validated ROA
+                   Payload.";
               }
               leaf max-len {
                 type ipv4-pfx-len;
@@ -143,7 +146,8 @@ module ietf-rpki-table {
               leaf asn {
                 type inet:as-number;
                 description
-                  "The origin AS number of the ROA.";
+                  "The origin AS number of the Validated
+                   ROA Payload.";
               }
               leaf source {
                 type union {
@@ -176,19 +180,21 @@ module ietf-rpki-table {
         container ipv6 {
           config false;
           description
-            "Container for IPv6 ROAs table.";
-          container roas {
+            "Container for IPv6 Validated ROA Payloads table.";
+          container vrps {
             config false;
             description
-              "ROAs received from the RPKI cache server.";
-            list roa {
+              "Validated ROA Payloads received from the RPKI
+               cache server.";
+            list vrp {
               key "prefix max-len asn source";
               description
-                "An entry of ROA.";
+                "An entry of Validated ROA Payload.";
               leaf prefix {
                 type inet:ipv6-prefix;
                 description
-                  "The IPv6 prefix of the ROA.";
+                  "The IPv6 prefix of the Validated ROA
+                   Payload.";
               }
               leaf max-len {
                 type ipv6-pfx-len;
@@ -199,7 +205,8 @@ module ietf-rpki-table {
               leaf asn {
                 type inet:as-number;
                 description
-                  "The origin AS number of the ROA.";
+                  "The origin AS number of the Validated ROA
+                   Payload.";
               }
               leaf source {
                 type union {
