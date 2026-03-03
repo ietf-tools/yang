@@ -70,6 +70,26 @@ module ietf-rpki-table {
     description
       "Subject Key Identifier.";
   }
+  typedef ccr-hash {
+    type binary {
+      length 32;
+    }
+    description
+      "Canonical Cache Representation state hash.
+
+       This represents a 256-bit SHA-256 hash of
+       the canonical representation of RPKI data as
+       defined in draft-ietf-sidrops-rpki-ccr.
+
+       The hash provides a compact, verifiable
+       representation of the complete state of RPKI
+       validation data, enabling efficient synchronization
+       and consistency verification between caches.";
+    reference
+      "draft-ietf-sidrops-rpki-ccr: Canonical Cache
+       Representation for the Resource Public Key
+       Infrastructure (RPKI)";
+  }
   grouping aspa-overall-records {
     description
       "ASPAs received from all RPKI cache servers.";
@@ -117,6 +137,21 @@ module ietf-rpki-table {
           type string;
           description
             "Name of the Validated ROA Payload table.";
+        }
+        leaf ccr-roapayloadstate-hash {
+          type ccr-hash;
+          description
+            "CCR state hash for the ROA payload.
+
+             This hash represents the canonical state of
+             this specific ROA entry as defined in the CCR
+             specification. It can be used to verify
+             the integrity and consistency of ROA data
+             between different RPKI cache implementations.";
+          reference
+            "draft-ietf-sidrops-rpki-ccr: Canonical Cache
+             Representation for the Resource Public Key
+             Infrastructure (RPKI)";
         }
         container ipv4 {
           config false;
@@ -254,6 +289,21 @@ module ietf-rpki-table {
           description
             "Name of the router-key-table.";
         }
+        leaf ccr-routerkeystate-hash {
+          type ccr-hash;
+          description
+            "CCR state hash for the Router Key payload.
+
+             This hash represents the canonical state of this
+             specific Router Key entry as defined in the CCR
+             specification. It enables efficient verification
+             of BGPsec router key data consistency across
+             different cache implementations.";
+          reference
+            "draft-ietf-sidrops-rpki-ccr: Canonical Cache
+             Representation for the Resource Public Key
+             Infrastructure (RPKI)";
+        }
         container router-keys {
           config false;
           description
@@ -306,6 +356,21 @@ module ietf-rpki-table {
           type string;
           description
             "Name of the ASPA-table.";
+        }
+        leaf ccr-aspapayloadstate-hash {
+          type ccr-hash;
+          description
+            "CCR state hash for the ASPA payload.
+
+             This hash represents the canonical state of this
+             specific ASPA (Autonomous System Provider
+             Authorization) entry as defined in the CCR
+             specification. It facilitates consistency
+             checking for AS path validation data.";
+          reference
+            "draft-ietf-sidrops-rpki-ccr: Canonical Cache
+             Representation for the Resource Public Key
+             Infrastructure (RPKI)";
         }
         uses aspa-overall-records;
       }
