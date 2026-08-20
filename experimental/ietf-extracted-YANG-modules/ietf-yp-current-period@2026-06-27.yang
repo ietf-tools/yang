@@ -45,7 +45,7 @@ module ietf-yp-current-period {
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
      This version of this YANG module is part of RFC XXXX; see the
-     RFC itself for full legal notices.  ";
+     RFC itself for full legal notices.";
 
   revision 2026-06-27 {
     description
