@@ -42,6 +42,14 @@ module iana-dns-class-rr-type {
     "IANA 'Domain Name System (DNS) Parameters' registry
      https://www.iana.org/assignments/dns-parameters";
 
+   revision 2026-08-20 {
+     description 
+       "Added RR Types UNECE 69 and ISO 70.";
+     reference
+       "draft-woodcock-faltstrom-external-registry-rrtypes-00"
+     + "iana-dns-class-rr-type@2026-08-20.yang";
+  }
+
    revision 2025-12-29 {
      description 
        "Added missing 67 HHIT, 68 BRID registrations.";
@@ -691,6 +699,20 @@ Plan - Name Service, April 1987.";
           "UAS Broadcast Remote Identification";
         reference
           "RFC 9886";
+      }
+      enum UNECE {
+        value 69;
+        description
+          "Value coded per a UNECE Recommendation";
+        reference
+          "draft-woodcock-faltstrom-external-registry-rrtypes-00";
+      }
+      enum ISO {
+        value 70;
+        description
+          "Value coded per an ISO standard";
+        reference
+          "draft-woodcock-faltstrom-external-registry-rrtypes-00";
       }
       enum SPF {
         value 99;
